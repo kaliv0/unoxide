@@ -16,7 +16,6 @@ pub struct Cli {
 
 impl Cli {
     pub fn run() -> Result<()> {
-        // refactor return type -> use anyhow?
         let cli = Self::parse();
 
         match cli.subcommands {
@@ -25,7 +24,13 @@ impl Cli {
                 files,
                 number_lines,
                 number_nonblank_lines,
-            } => cat(files, number_lines, number_nonblank_lines),
+                squeeze_blank_lines,
+            } => cat(
+                files,
+                number_lines,
+                number_nonblank_lines,
+                squeeze_blank_lines,
+            ),
             // _ => Ok(()), // throw error?
         }
     }

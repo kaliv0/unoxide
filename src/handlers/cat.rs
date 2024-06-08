@@ -1,27 +1,33 @@
-use crate::utils::reader::open;
+use crate::utils::file_reader::open;
 use anyhow::Result;
 use std::io::BufRead;
 
-pub fn cat(files: Vec<String>, number_lines: bool, number_nonblank_lines: bool) -> Result<()> {
+pub fn cat(
+    files: Vec<String>,
+    number_lines: bool,
+    number_nonblank_lines: bool,
+    squeeze_blank_lines: bool,
+) -> Result<()> {
     for filename in files {
         match open(&filename) {
             Err(e) => eprintln!("{filename}: {e}"),
             Ok(file) => {
-                let mut prev_num = 0;
-                for (line_num, line_result) in file.lines().enumerate() {
+                let mut line_num = 0;
+                let mut prev_line = String::new();
+                for line_result in file.lines() {
                     let line = line_result?;
-                    if number_lines {
-                        println!("{:6}\t{}", line_num + 1, line);
-                    } else if number_nonblank_lines {
-                        if line.is_empty() {
-                            println!();
-                        } else {
-                            prev_num += 1;
-                            println!("{:6}\t{}", prev_num, line);
-                        }
+                    if squeeze_blank_lines && line.is_empty() && prev_line.is_empty() {
+                        prev_line = line;
+                        continue;
+                    }
+
+                    if number_lines || (number_nonblank_lines && !line.is_empty()) {
+                        line_num += 1;
+                        println!("{:6}\t{}", line_num, line);
                     } else {
                         println!("{}", line);
                     }
+                    prev_line = line;
                 }
             }
         }
