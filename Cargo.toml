@@ -1,0 +1,25 @@
+[package]
+edition = "2021"
+name = "unox"
+version = "0.1.0"
+# author = {...}
+
+# [[bin]]
+# name = "unox"
+# path = "src/main.rs"
+
+# [lib]
+# name = "unox"
+# path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+clap = {version = "4.5.6", features = ["derive"]}
+
+[dev-dependencies]
+assert_cmd = "2.0.14"
+predicates = "3.1.0"
+pretty_assertions = "1.4.0"
+rand = "0.8.5"
