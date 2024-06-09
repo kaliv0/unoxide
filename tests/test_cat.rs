@@ -89,7 +89,11 @@ fn run_stdin(input_file: &str, args: &[&str], expected_file: &str) -> Result<()>
 // --------------------------------------------------
 #[test]
 fn bustle_stdin() -> Result<()> {
-    run_stdin(BUSTLE, &["-"], "tests/resources/cat/expected/the-bustle.txt.stdin.out")
+    run_stdin(
+        BUSTLE,
+        &["-"],
+        "tests/resources/cat/expected/the-bustle.txt.stdin.out",
+    )
 }
 
 // --------------------------------------------------
@@ -121,13 +125,19 @@ fn empty() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn empty_n() -> Result<()> {
-    run(&["-n", EMPTY], "tests/resources/cat/expected/empty.txt.n.out")
+    run(
+        &["-n", EMPTY],
+        "tests/resources/cat/expected/empty.txt.n.out",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_b() -> Result<()> {
-    run(&["-b", EMPTY], "tests/resources/cat/expected/empty.txt.b.out")
+    run(
+        &["-b", EMPTY],
+        "tests/resources/cat/expected/empty.txt.b.out",
+    )
 }
 
 // --------------------------------------------------
@@ -157,7 +167,10 @@ fn spiders() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn spiders_n() -> Result<()> {
-    run(&["--number", SPIDERS], "tests/resources/cat/expected/spiders.txt.n.out")
+    run(
+        &["--number", SPIDERS],
+        "tests/resources/cat/expected/spiders.txt.n.out",
+    )
 }
 
 // --------------------------------------------------
@@ -178,29 +191,73 @@ fn bustle() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn bustle_n() -> Result<()> {
-    run(&["-n", BUSTLE], "tests/resources/cat/expected/the-bustle.txt.n.out")
+    run(
+        &["-n", BUSTLE],
+        "tests/resources/cat/expected/the-bustle.txt.n.out",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_b() -> Result<()> {
-    run(&["-b", BUSTLE], "tests/resources/cat/expected/the-bustle.txt.b.out")
+    run(
+        &["-b", BUSTLE],
+        "tests/resources/cat/expected/the-bustle.txt.b.out",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn all() -> Result<()> {
-    run(&[FOX, SPIDERS, BUSTLE], "tests/resources/cat/expected/all.out")
+    run(
+        &[FOX, SPIDERS, BUSTLE],
+        "tests/resources/cat/expected/all.out",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn all_n() -> Result<()> {
-    run(&[FOX, SPIDERS, BUSTLE, "-n"], "tests/resources/cat/expected/all.n.out")
+    run(
+        &[FOX, SPIDERS, BUSTLE, "-n"],
+        "tests/resources/cat/expected/all.n.out",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn all_b() -> Result<()> {
-    run(&[FOX, SPIDERS, BUSTLE, "-b"], "tests/resources/cat/expected/all.b.out")
+    run(
+        &[FOX, SPIDERS, BUSTLE, "-b"],
+        "tests/resources/cat/expected/all.b.out",
+    )
+}
+
+//--------------------------------
+//--------------------------------
+//--------------------------------
+#[test]
+fn test_custom_vs_actual() -> Result<()> {
+    let text = String::from("tests/resources/cat/inputs/spiders.txt");
+
+    let expected = std::process::Command::new(SUBCMD)
+        .arg(&text)
+        .output()
+        .unwrap();
+
+    let actual = Command::cargo_bin(PRG)?
+        .arg(SUBCMD)
+        .arg(&text)
+        .output()
+        .unwrap();
+
+    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
+    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
+
+    // println!("{expected_stdout}");
+    // println!("{actual_stdout}");
+
+    assert!(actual.status.success());
+    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
+    Ok(())
 }
