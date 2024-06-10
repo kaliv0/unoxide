@@ -2,7 +2,7 @@ use anyhow::Result;
 use clap::Parser;
 
 use super::subcommands::Subcommands;
-use crate::handlers::{cat::cat, echo::echo};
+use crate::handlers::{cat::cat, echo::echo, head::head};
 
 #[derive(Parser)]
 #[clap(name = "unox")]
@@ -31,6 +31,11 @@ impl Cli {
                 number_nonblank_lines,
                 squeeze_blank_lines,
             ),
+            Subcommands::Head {
+                files,
+                lines,
+                bytes,
+            } => head(files, lines, bytes),
             // _ => Ok(()), // throw error?
         }
     }
