@@ -1,4 +1,4 @@
-use crate::utils::file_reader::open;
+use crate::utils::file_reader;
 use anyhow::Result;
 use std::io::BufRead;
 
@@ -9,7 +9,7 @@ pub fn cat(
     squeeze_blank_lines: bool,
 ) -> Result<()> {
     for filename in files {
-        match open(&filename) {
+        match file_reader::open(&filename) {
             Err(e) => eprintln!("cat: {filename}: {e}"),
             Ok(file) => {
                 handle_file(

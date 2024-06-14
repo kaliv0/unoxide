@@ -1,4 +1,4 @@
-use cli::interface::Cli;
+use cli::Cli;
 
 mod cli;
 mod handlers;

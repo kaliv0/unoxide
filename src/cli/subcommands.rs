@@ -34,16 +34,25 @@ With no FILE, or when FILE is -, read standard input.")]
         squeeze_blank_lines: bool,
     },
 
-    #[clap(about = "")]
+    #[clap(about = "Print the first 10 lines of each FILE to standard output.
+With more than one FILE, precede each with a header giving the file name.
+
+With no FILE, or when FILE is -, read standard input.")]
     Head {
         #[arg(value_name = "FILE", default_value = "-")]
         files: Vec<String>,
 
         // line too long
-        #[arg(short('n'), long, default_value = "10", value_name = "LINES", value_parser = clap::value_parser!(u64).range(1..))]
+        #[arg(short('n'), long, value_name = "LINES", value_parser = clap::value_parser!(u64).range(1..), default_value = "10")]
         lines: u64,
 
         #[arg(short('c'), long, value_name = "BYTES", conflicts_with("lines"), value_parser = clap::value_parser!(u64).range(1..))]
         bytes: Option<u64>,
+
+        #[arg(short, long("quiet"), visible_alias = "silent")]
+        quiet: bool,
+
+        #[arg(short, long, conflicts_with("quiet"))]
+        verbose: bool,
     },
 }

@@ -1,0 +1,7 @@
+- extract  'Err(err) => eprintln!("{command}: {filename}: {err}")' -> equal for all commands
+- mov Cli forom interface.rs to mod.rs in dir?
+- should we import file_reader or directly it's "open" method?
+- add 'help' for subcommands -> with '///' over each field in struct
+- fix or remove failing tests from 'head'
+- write custom_vs_actual tests and remove the other ones
+- add tests for errors as well
