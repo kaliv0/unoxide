@@ -55,4 +55,28 @@ With no FILE, or when FILE is -, read standard input.")]
         #[arg(short, long, conflicts_with("quiet"))]
         verbose: bool,
     },
+
+    #[clap(
+        about = "Print newline, word, and byte counts for each FILE, and a total line if
+more than one FILE is specified.  A word is a non-zero-length sequence of
+characters delimited by white space.
+
+With no FILE, or when FILE is -, read standard input."
+    )]
+    Wc {
+        #[arg(value_name = "FILE", default_value = "-")]
+        files: Vec<String>,
+
+        #[arg(short, long)]
+        lines: bool,
+
+        #[arg(short, long)]
+        words: bool,
+
+        #[arg(short('c'), long)]
+        bytes: bool,
+
+        #[arg(short('m'), long, conflicts_with("bytes"))]
+        chars: bool,
+    },
 }

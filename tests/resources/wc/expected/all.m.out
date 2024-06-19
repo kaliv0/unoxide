@@ -1,0 +1,4 @@
+       0 ./tests/resources/wc/inputs/empty.txt
+      48 ./tests/resources/wc/inputs/fox.txt
+     159 ./tests/resources/wc/inputs/atlamal.txt
+     207 total

@@ -7,10 +7,10 @@ use std::fs;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "cat";
-const EMPTY: &str = "tests/resources/cat/inputs/empty.txt";
-const FOX: &str = "tests/resources/cat/inputs/fox.txt";
-const SPIDERS: &str = "tests/resources/cat/inputs/spiders.txt";
-const BUSTLE: &str = "tests/resources/cat/inputs/the-bustle.txt";
+const EMPTY: &str = "./tests/resources/cat/inputs/empty.txt";
+const FOX: &str = "./tests/resources/cat/inputs/fox.txt";
+const SPIDERS: &str = "./tests/resources/cat/inputs/spiders.txt";
+const BUSTLE: &str = "./tests/resources/cat/inputs/the-bustle.txt";
 
 // --------------------------------------------------
 #[test]

@@ -3,7 +3,7 @@ use anyhow::Result;
 use std::io::BufRead;
 
 pub fn head(
-    files: Vec<String>,
+    files: &[String],
     lines: u64,
     bytes: Option<u64>,
     quiet: bool,

@@ -1,6 +1,6 @@
 pub mod subcommands;
 
-use crate::handlers::{cat::cat, echo::echo, head::head};
+use crate::handlers::{cat::cat, echo::echo, head::head, wc::wc};
 use anyhow::Result;
 use clap::Parser;
 use subcommands::Subcommands;
@@ -20,14 +20,14 @@ impl Cli {
         let cli = Self::parse();
 
         match cli.subcommands {
-            Subcommands::Echo { text, omit_newline } => echo(text, omit_newline),
+            Subcommands::Echo { text, omit_newline } => echo(&text, omit_newline),
             Subcommands::Cat {
                 files,
                 number_lines,
                 number_nonblank_lines,
                 squeeze_blank_lines,
             } => cat(
-                files,
+                &files,
                 number_lines,
                 number_nonblank_lines,
                 squeeze_blank_lines,
@@ -38,7 +38,14 @@ impl Cli {
                 bytes,
                 quiet,
                 verbose,
-            } => head(files, lines, bytes, quiet, verbose),
+            } => head(&files, lines, bytes, quiet, verbose),
+            Subcommands::Wc {
+                files,
+                lines,
+                words,
+                bytes,
+                chars,
+            } => wc(&files, lines, words, bytes, chars),
             // _ => Ok(()), // throw error?
         }
     }

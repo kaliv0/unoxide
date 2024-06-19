@@ -3,7 +3,7 @@ use anyhow::Result;
 use std::io::BufRead;
 
 pub fn cat(
-    files: Vec<String>,
+    files: &[String],
     number_lines: bool,
     number_nonblank_lines: bool,
     squeeze_blank_lines: bool,
