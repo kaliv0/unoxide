@@ -1,7 +1,9 @@
-use crate::utils::file_reader;
+use crate::utils::{display_error, file_reader};
 use anyhow::Result;
+// use function_name::named;
 use std::io::BufRead;
 
+// #[named]
 pub fn cat(
     files: &[String],
     number_lines: bool,
@@ -10,7 +12,8 @@ pub fn cat(
 ) -> Result<()> {
     for filename in files {
         match file_reader::open(&filename) {
-            Err(e) => eprintln!("cat: {filename}: {e}"),
+            // Err(e) => display_error(function_name!(), filename, &e),
+            Err(e) => display_error("cat", filename, &e),
             Ok(file) => {
                 handle_file(
                     file,

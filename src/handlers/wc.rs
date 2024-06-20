@@ -1,4 +1,4 @@
-use crate::utils::file_reader;
+use crate::utils::{display_error, file_reader};
 use anyhow::Result;
 use std::io::BufRead;
 
@@ -33,7 +33,7 @@ pub fn wc(
 
     for filename in files {
         match file_reader::open(filename) {
-            Err(err) => eprintln!("{filename}: {err}"),
+            Err(e) => display_error("wc", filename, &e),
             Ok(file) => {
                 if let Ok(data) = count(file) {
                     println!(
