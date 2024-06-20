@@ -4,3 +4,4 @@
 - write custom_vs_actual tests and remove the other ones
 - add tests for errors as well
 - add support for negative line/byte count in head
+- move cli/help_messages to utils module

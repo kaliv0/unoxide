@@ -37,17 +37,17 @@ pub enum Subcommands {
 
         /// print the first NUM lines instead of the first 10;
         #[arg(
-            short('n'), 
-            long, 
-            value_name = "LINES", 
-            value_parser = clap::value_parser!(u64).range(1..), 
+            short('n'),
+            long,
+            value_name = "LINES",
+            value_parser = clap::value_parser!(u64).range(1..),
             default_value = "10"
         )]
         lines: u64,
 
         /// print the first NUM bytes of each file
         #[arg(
-            short('c'), 
+            short('c'),
             long,
             value_name = "BYTES", 
             value_parser = clap::value_parser!(u64).range(1..),

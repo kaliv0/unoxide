@@ -42,17 +42,26 @@ fn hello1() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn hello2() -> Result<()> {
-    run(&["Hello", "there"], "tests/resources/echo/expected/hello2.txt")
+    run(
+        &["Hello", "there"],
+        "tests/resources/echo/expected/hello2.txt",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn hello1_no_newline() -> Result<()> {
-    run(&["Hello  there", "-n"], "tests/resources/echo/expected/hello1.n.txt")
+    run(
+        &["Hello  there", "-n"],
+        "tests/resources/echo/expected/hello1.n.txt",
+    )
 }
 
 // --------------------------------------------------
 #[test]
 fn hello2_no_newline() -> Result<()> {
-    run(&["-n", "Hello", "there"], "tests/resources/echo/expected/hello2.n.txt")
+    run(
+        &["-n", "Hello", "there"],
+        "tests/resources/echo/expected/hello2.n.txt",
+    )
 }
