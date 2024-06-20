@@ -15,7 +15,7 @@ pub fn head(
             Err(err) => eprintln!("head: {filename}: {err}"),
             Ok(file) => {
                 handle_file(
-                    filename, num_files, file_num, bytes, file, lines, quiet, verbose,
+                    file, filename, num_files, file_num, bytes, lines, quiet, verbose,
                 )?;
             }
         }
@@ -24,11 +24,11 @@ pub fn head(
 }
 
 fn handle_file(
+    mut file: Box<dyn BufRead>,
     filename: &String,
     num_files: usize,
     file_num: usize,
     bytes: Option<u64>,
-    mut file: Box<dyn BufRead>,
     lines: u64,
     quiet: bool,
     verbose: bool,
@@ -44,12 +44,6 @@ fn handle_file(
         let mut buffer = vec![0; num_bytes as usize];
         let bytes_read = file.read(&mut buffer)?;
         print!("{}", String::from_utf8_lossy(&buffer[..bytes_read]));
-
-        /* NB: buffer has the size of num_bytes
-        -> no need to read explicitly up to ..num_bytes
-        except for safety reasons */
-        // file.read(&mut buffer)?;
-        // print!("{}", String::from_utf8_lossy(&buffer));
     } else {
         let mut line = String::new();
         for _ in 0..lines {

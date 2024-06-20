@@ -1,3 +1,4 @@
+pub mod help_messages;
 pub mod subcommands;
 
 use crate::handlers::{cat::cat, echo::echo, head::head, wc::wc};

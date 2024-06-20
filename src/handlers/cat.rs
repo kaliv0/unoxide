@@ -32,9 +32,8 @@ fn handle_file(
 ) -> Result<()> {
     let mut line_num = 0;
     let mut prev_line = String::new();
-    let mut line; // bad practice but innocent here
     for line_result in file.lines() {
-        line = line_result?;
+        let line = line_result?;
         if squeeze_blank_lines && line.is_empty() && prev_line.is_empty() {
             prev_line = line;
             continue;

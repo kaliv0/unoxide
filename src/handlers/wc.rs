@@ -1,7 +1,6 @@
-use std::io::BufRead;
-
 use crate::utils::file_reader;
 use anyhow::Result;
+use std::io::BufRead;
 
 #[derive(Debug, PartialEq)]
 struct FileData {
@@ -19,15 +18,14 @@ pub fn wc(
     mut bytes: bool,
     chars: bool,
 ) -> Result<()> {
-    // no flags are passed all of them except chars should be true
-    // extract function?
+    // adjust booleans
     if [lines, words, bytes, chars].iter().all(|val| val == &false) {
-        // or -> all(|val| !val)
         lines = true;
         words = true;
         bytes = true;
     }
 
+    // read file + statistics
     let mut total_lines = 0;
     let mut total_words = 0;
     let mut total_bytes = 0;
@@ -59,6 +57,7 @@ pub fn wc(
         }
     }
 
+    // print footer
     if files.len() > 1 {
         println!(
             "{}{}{}{} total",
@@ -76,10 +75,10 @@ fn count(mut file: impl BufRead) -> Result<FileData> {
     let mut num_words = 0;
     let mut num_bytes = 0;
     let mut num_chars = 0;
-    let mut line = String::new(); //rename 'line_buffer'?
+    let mut line = String::new();
 
     loop {
-        let line_bytes = file.read_line(&mut line)?; //extract line_bytes declaration outside ot loop
+        let line_bytes = file.read_line(&mut line)?;
         if line_bytes == 0 {
             break;
         }
@@ -90,7 +89,6 @@ fn count(mut file: impl BufRead) -> Result<FileData> {
 
         line.clear();
     }
-
     Ok(FileData {
         num_lines,
         num_words,
