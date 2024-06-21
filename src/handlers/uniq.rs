@@ -1,30 +1,19 @@
-use crate::utils::file_reader;
-use anyhow::{anyhow, Ok, Result};
+use crate::utils::{display_error, file_reader};
+use anyhow::{Ok, Result};
 use std::{
     fs::File,
     io::{self, BufRead, Write},
 };
 
 pub fn uniq(in_file: &str, out_file: Option<&str>, show_count: bool) -> Result<()> {
-    // refactor as other subcommands with match statements?
-    // probably used here with closure to avoid packing everything inside Ok match arm?!
-    let mut file = file_reader::open(in_file).map_err(|e| anyhow!("{in_file}: {e}"))?;
+    let mut file = file_reader::open(in_file)
+        .map_err(|e| display_error("uniq", in_file, &e))
+        .unwrap();
 
     let mut output_file: Box<dyn Write> = match out_file {
         Some(out_name) => Box::new(File::create(out_name)?),
         _ => Box::new(io::stdout()),
     };
-
-    // let mut print = |num: u64, text: &str| -> Result<()> {
-    //     if num > 0 {
-    //         if show_count {
-    //             write!(output_file, "{num:>4} {text}")?;
-    //         } else {
-    //             write!(output_file, "{text}")?;
-    //         }
-    //     };
-    //     Ok(())
-    // };
 
     let mut line = String::new();
     let mut previous = String::new();
@@ -34,20 +23,34 @@ pub fn uniq(in_file: &str, out_file: Option<&str>, show_count: bool) -> Result<(
         if bytes == 0 {
             break;
         }
-
         if line.trim_end() != previous.trim_end() {
-            // output_file = log_data(show_count, output_file, count, &previous)?; //fix
             write!(output_file, "{}", format_data(show_count, count, &previous))?;
             previous = line.clone();
             count = 0;
         }
-
         count += 1;
         line.clear();
     }
-    // print(count, &previous)?;
+    /*      counter = 1
+            curr_line = file.readline()
+            while next_line := file.readline():
+                # count duplicates until different line is reached
+                if self._compare_lines(curr_line, next_line):
+                    counter += 1
+                    if self.show_all_repeated:
+                        self._handle_message(counter, curr_line)
+                        curr_line = next_line
+                    continue
+                # previous line is different compared to next_one
+                # but 'uniq' only if not last in series of duplicates
+                self._handle_message(counter, curr_line)
+                counter = 1
+                curr_line = next_line
+            # handle last line in file
+            self._handle_message(counter, curr_line)
+    */
+
     write!(output_file, "{}", format_data(show_count, count, &previous))?;
-    // log_data(show_count, output_file, count, &previous)?;
     Ok(())
 }
 

@@ -18,7 +18,7 @@ pub fn wc(
     mut bytes: bool,
     chars: bool,
 ) -> Result<()> {
-    adjust_flags(&mut lines, &mut words, &mut bytes, chars);
+    adjust_flags(&mut lines, &mut words, &mut bytes, chars)?;
 
     let mut total_lines = 0;
     let mut total_words = 0;
@@ -39,7 +39,7 @@ pub fn wc(
                     &mut total_words,
                     &mut total_bytes,
                     &mut total_chars,
-                );
+                )?;
             }
         }
     }
@@ -53,13 +53,13 @@ pub fn wc(
             total_words,
             total_bytes,
             total_chars,
-        );
+        )?;
     }
     Ok(())
 }
 
 //----------------------
-fn adjust_flags(lines: &mut bool, words: &mut bool, bytes: &mut bool, chars: bool) {
+fn adjust_flags(lines: &mut bool, words: &mut bool, bytes: &mut bool, chars: bool) -> Result<()> {
     if [*lines, *words, *bytes, chars]
         .iter()
         .all(|val| val == &false)
@@ -68,6 +68,7 @@ fn adjust_flags(lines: &mut bool, words: &mut bool, bytes: &mut bool, chars: boo
         *words = true;
         *bytes = true;
     }
+    Ok(())
 }
 
 fn handle_file(
@@ -81,7 +82,7 @@ fn handle_file(
     total_words: &mut usize,
     total_bytes: &mut usize,
     total_chars: &mut usize,
-) {
+) -> Result<()> {
     if let Ok(data) = count(file) {
         println!(
             "{}{}{}{}{}",
@@ -96,6 +97,7 @@ fn handle_file(
         *total_bytes += data.num_bytes;
         *total_chars += data.num_chars;
     }
+    Ok(())
 }
 
 fn count(mut file: Box<dyn BufRead>) -> Result<FileData> {
@@ -134,7 +136,7 @@ fn display_totals(
     total_words: usize,
     total_bytes: usize,
     total_chars: usize,
-) {
+) -> Result<()> {
     println!(
         "{}{}{}{} total",
         format_field(total_lines, lines),
@@ -142,6 +144,7 @@ fn display_totals(
         format_field(total_bytes, bytes),
         format_field(total_chars, chars)
     );
+    Ok(())
 }
 
 fn format_field(value: usize, flag: bool) -> String {

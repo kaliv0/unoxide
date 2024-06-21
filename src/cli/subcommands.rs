@@ -97,5 +97,13 @@ pub enum Subcommands {
         /// prefix lines by the number of occurrences
         #[arg(short('c'), long("count"))]
         show_count: bool,
+        /*
+        TODO:
+        -show_repeated,
+        -show_all_repeated,
+        -ignore_case,
+        -check_chars,
+        -skip_chars,
+         */
     },
 }
