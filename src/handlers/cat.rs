@@ -11,7 +11,7 @@ pub fn cat(
     squeeze_blank_lines: bool,
 ) -> Result<()> {
     for filename in files {
-        match file_reader::open(&filename) {
+        match file_reader::open(filename) {
             // Err(e) => display_error(function_name!(), filename, &e),
             Err(e) => display_error("cat", filename, &e),
             Ok(file) => {

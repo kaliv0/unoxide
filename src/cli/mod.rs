@@ -1,7 +1,7 @@
 pub mod help_messages;
 pub mod subcommands;
 
-use crate::handlers::{cat::cat, echo::echo, head::head, wc::wc};
+use crate::handlers::{cat::cat, echo::echo, head::head, uniq::uniq, wc::wc};
 use anyhow::Result;
 use clap::Parser;
 use subcommands::Subcommands;
@@ -47,6 +47,11 @@ impl Cli {
                 bytes,
                 chars,
             } => wc(&files, lines, words, bytes, chars),
+            Subcommands::Uniq {
+                in_file,
+                out_file,
+                show_count,
+            } => uniq(&in_file, out_file.as_deref(), show_count),
             // _ => Ok(()), // throw error?
         }
     }

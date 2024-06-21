@@ -85,4 +85,17 @@ pub enum Subcommands {
         #[arg(short('m'), long, conflicts_with("bytes"))]
         chars: bool,
     },
+
+    #[clap(about=help_messages::UNIQ)]
+    Uniq {
+        #[arg(value_name = "IN_FILE", default_value = "-")]
+        in_file: String,
+
+        #[arg(value_name = "OUT_FILE")]
+        out_file: Option<String>,
+
+        /// prefix lines by the number of occurrences
+        #[arg(short('c'), long("count"))]
+        show_count: bool,
+    },
 }

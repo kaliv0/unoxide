@@ -17,3 +17,11 @@ more than one FILE is specified.  A word is a non-zero-length sequence of
 characters delimited by white space.
 
 With no FILE, or when FILE is -, read standard input.";
+
+pub const UNIQ: &str = "Filter adjacent matching lines from INPUT (or standard input),
+writing to OUTPUT (or standard output).
+
+With no options, matching lines are merged to the first occurrence.
+
+Note: 'uniq' does not detect repeated lines unless they are adjacent.
+You may want to sort the input first, or use 'sort -u' without 'uniq'.";

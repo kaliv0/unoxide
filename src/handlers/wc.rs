@@ -18,59 +18,87 @@ pub fn wc(
     mut bytes: bool,
     chars: bool,
 ) -> Result<()> {
-    // adjust booleans
-    if [lines, words, bytes, chars].iter().all(|val| val == &false) {
-        lines = true;
-        words = true;
-        bytes = true;
-    }
+    adjust_flags(&mut lines, &mut words, &mut bytes, chars);
 
-    // read file + statistics
     let mut total_lines = 0;
     let mut total_words = 0;
     let mut total_bytes = 0;
     let mut total_chars = 0;
-
     for filename in files {
         match file_reader::open(filename) {
             Err(e) => display_error("wc", filename, &e),
             Ok(file) => {
-                if let Ok(data) = count(file) {
-                    println!(
-                        "{}{}{}{}{}",
-                        format_field(data.num_lines, lines),
-                        format_field(data.num_words, words),
-                        format_field(data.num_bytes, bytes),
-                        format_field(data.num_chars, chars),
-                        if filename == "-" {
-                            "".to_string()
-                        } else {
-                            format!(" {filename}")
-                        }
-                    );
-                    total_lines += data.num_lines;
-                    total_words += data.num_words;
-                    total_bytes += data.num_bytes;
-                    total_chars += data.num_chars;
-                }
+                handle_file(
+                    file,
+                    lines,
+                    words,
+                    bytes,
+                    chars,
+                    filename,
+                    &mut total_lines,
+                    &mut total_words,
+                    &mut total_bytes,
+                    &mut total_chars,
+                );
             }
         }
     }
-
-    // print footer
     if files.len() > 1 {
-        println!(
-            "{}{}{}{} total",
-            format_field(total_lines, lines),
-            format_field(total_words, words),
-            format_field(total_bytes, bytes),
-            format_field(total_chars, chars)
+        display_totals(
+            lines,
+            words,
+            bytes,
+            chars,
+            total_lines,
+            total_words,
+            total_bytes,
+            total_chars,
         );
     }
     Ok(())
 }
 
-fn count(mut file: impl BufRead) -> Result<FileData> {
+//----------------------
+fn adjust_flags(lines: &mut bool, words: &mut bool, bytes: &mut bool, chars: bool) {
+    if [*lines, *words, *bytes, chars]
+        .iter()
+        .all(|val| val == &false)
+    {
+        *lines = true;
+        *words = true;
+        *bytes = true;
+    }
+}
+
+fn handle_file(
+    file: Box<dyn BufRead>,
+    lines: bool,
+    words: bool,
+    bytes: bool,
+    chars: bool,
+    filename: &String,
+    total_lines: &mut usize,
+    total_words: &mut usize,
+    total_bytes: &mut usize,
+    total_chars: &mut usize,
+) {
+    if let Ok(data) = count(file) {
+        println!(
+            "{}{}{}{}{}",
+            format_field(data.num_lines, lines),
+            format_field(data.num_words, words),
+            format_field(data.num_bytes, bytes),
+            format_field(data.num_chars, chars),
+            format_filename(filename)
+        );
+        *total_lines += data.num_lines;
+        *total_words += data.num_words;
+        *total_bytes += data.num_bytes;
+        *total_chars += data.num_chars;
+    }
+}
+
+fn count(mut file: Box<dyn BufRead>) -> Result<FileData> {
     let mut num_lines = 0;
     let mut num_words = 0;
     let mut num_bytes = 0;
@@ -97,10 +125,37 @@ fn count(mut file: impl BufRead) -> Result<FileData> {
     })
 }
 
+fn display_totals(
+    lines: bool,
+    words: bool,
+    bytes: bool,
+    chars: bool,
+    total_lines: usize,
+    total_words: usize,
+    total_bytes: usize,
+    total_chars: usize,
+) {
+    println!(
+        "{}{}{}{} total",
+        format_field(total_lines, lines),
+        format_field(total_words, words),
+        format_field(total_bytes, bytes),
+        format_field(total_chars, chars)
+    );
+}
+
 fn format_field(value: usize, flag: bool) -> String {
     if flag {
         format!("{value:>8}")
     } else {
         "".to_string()
+    }
+}
+
+fn format_filename(filename: &str) -> String {
+    if filename == "-" {
+        "".to_string()
+    } else {
+        format!(" {filename}")
     }
 }
