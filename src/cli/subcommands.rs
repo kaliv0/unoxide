@@ -97,6 +97,18 @@ pub enum Subcommands {
         /// prefix lines by the number of occurrences
         #[arg(short('c'), long("count"))]
         show_count: bool,
+
+        /// only print unique lines
+        #[arg(short('u'), long("unique"))]
+        show_unique: bool,
+
+        /// only print duplicate lines, one for each group
+        #[arg(short('d'), long("repeated"))]
+        show_repeated: bool,
+
+        /// ignore differences in case when comparing
+        #[arg(short, long)]
+        ignore_case: bool,
         /*
         TODO:
         -show_repeated,

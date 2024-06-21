@@ -51,8 +51,29 @@ impl Cli {
                 in_file,
                 out_file,
                 show_count,
-            } => uniq(&in_file, out_file.as_deref(), show_count),
+                show_unique,
+                show_repeated,
+                ignore_case,
+            } => uniq(
+                &in_file,
+                out_file.as_deref(),
+                &UniqFlags {
+                    show_count,
+                    show_unique,
+                    show_repeated,
+                    ignore_case,
+                },
+            ),
             // _ => Ok(()), // throw error?
         }
     }
+}
+
+//--------------
+//move to util file?
+pub struct UniqFlags {
+    pub show_count: bool,
+    pub show_unique: bool,
+    pub show_repeated: bool,
+    pub ignore_case: bool,
 }

@@ -98,14 +98,13 @@ fn gen_bad_file() -> String {
 
 // --------------------------------------------------
 #[test]
-fn dies_bad_file() -> Result<()> {
+fn skips_bad_file() -> Result<()> {
     let bad = gen_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
+    let expected = format!("uniq: {bad}: .* [(]os error 2[)]");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .arg(&bad)
         .assert()
-        .failure()
         .stderr(predicate::str::is_match(expected)?);
     Ok(())
 }
