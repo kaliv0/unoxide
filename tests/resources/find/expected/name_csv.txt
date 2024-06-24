@@ -1,0 +1,3 @@
+./tests/resources/find/inputs/a/b/b.csv
+./tests/resources/find/inputs/d/b.csv
+./tests/resources/find/inputs/g.csv

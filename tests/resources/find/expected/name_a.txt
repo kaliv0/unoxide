@@ -1,0 +1,2 @@
+./tests/resources/find/inputs/a
+./tests/resources/find/inputs/a/a.txt

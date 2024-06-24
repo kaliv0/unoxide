@@ -1,9 +1,9 @@
 pub mod help_messages;
 pub mod subcommands;
 
-use crate::handlers::{cat::cat, echo::echo, head::head, uniq::uniq, wc::wc};
+use crate::handlers::{cat::cat, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
 use anyhow::Result;
-use clap::Parser;
+use clap::{builder::PossibleValue, Parser, ValueEnum};
 use subcommands::Subcommands;
 
 #[derive(Parser)]
@@ -64,6 +64,11 @@ impl Cli {
                     ignore_case,
                 },
             ),
+            Subcommands::Find {
+                paths,
+                names,
+                entry_types,
+            } => find(&paths, &names, &entry_types),
             // _ => Ok(()), // throw error?
         }
     }
@@ -76,4 +81,26 @@ pub struct UniqFlags {
     pub show_unique: bool,
     pub show_repeated: bool,
     pub ignore_case: bool,
+}
+
+//--------------
+#[derive(Debug, Eq, PartialEq, Clone)]
+pub enum EntryType {
+    Dir,
+    File,
+    Link,
+}
+
+impl ValueEnum for EntryType {
+    fn value_variants<'a>() -> &'a [Self] {
+        &[EntryType::Dir, EntryType::File, EntryType::Link]
+    }
+
+    fn to_possible_value<'a>(&self) -> Option<PossibleValue> {
+        Some(match self {
+            EntryType::Dir => PossibleValue::new("d"),
+            EntryType::File => PossibleValue::new("f"),
+            EntryType::Link => PossibleValue::new("l"),
+        })
+    }
 }

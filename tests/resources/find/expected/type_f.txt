@@ -1,0 +1,8 @@
+./tests/resources/find/inputs/a/a.txt
+./tests/resources/find/inputs/a/b/b.csv
+./tests/resources/find/inputs/a/b/c/c.mp3
+./tests/resources/find/inputs/d/d.tsv
+./tests/resources/find/inputs/d/d.txt
+./tests/resources/find/inputs/d/e/e.mp3
+./tests/resources/find/inputs/f/f.txt
+./tests/resources/find/inputs/g.csv

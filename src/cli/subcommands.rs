@@ -1,5 +1,8 @@
+use crate::cli::EntryType;
+
 use super::help_messages;
-use clap::Subcommand;
+use clap::{ArgAction, Subcommand};
+use regex::Regex;
 
 #[derive(Subcommand)]
 pub enum Subcommands {
@@ -109,13 +112,36 @@ pub enum Subcommands {
         /// ignore differences in case when comparing
         #[arg(short, long)]
         ignore_case: bool,
+    },
+    #[clap(about = "")]
+    Find {
+        #[arg(value_name = "PATH", default_value = ".")]
+        paths: Vec<String>,
+        // add msg
+        #[arg(
+            short('n'),
+            long("name"),
+            value_name = "NAME",
+            value_parser(Regex::new),
+            action(ArgAction::Append),
+            num_args(0..)
+        )]
+        names: Vec<Regex>,
+
+        #[arg(
+            short('t'),
+            long("type"),
+            value_name = "TYPE",
+            value_parser(clap::value_parser!(EntryType)),
+            action(ArgAction::Append),
+            num_args(0..)
+        )]
+        entry_types: Vec<EntryType>,
         /*
-        TODO:
-        -show_repeated,
-        -show_all_repeated,
-        -ignore_case,
-        -check_chars,
-        -skip_chars,
+        -min_depth => use WalkDir::min_depth
+        -max_depth
+        - size?
+        - delete?
          */
     },
 }

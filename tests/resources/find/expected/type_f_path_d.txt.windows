@@ -1,0 +1,4 @@
+./tests/resources/find/inputs/d\b.csv
+./tests/resources/find/inputs/d\d.tsv
+./tests/resources/find/inputs/d\d.txt
+./tests/resources/find/inputs/d\e\e.mp3

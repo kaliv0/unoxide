@@ -1,0 +1,2 @@
+./tests/resources/find/inputs/d
+./tests/resources/find/inputs/d/e

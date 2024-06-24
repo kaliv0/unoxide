@@ -1,0 +1,3 @@
+./tests/resources/find/inputs/a
+./tests/resources/find/inputs/a/b
+./tests/resources/find/inputs/a/b/c
