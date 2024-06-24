@@ -32,7 +32,7 @@ fn handle_file(
     lines: u64,
     quiet: bool,
     verbose: bool,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     if verbose || (num_files > 1 && !quiet) {
         println!(
             "{}==> {} <==",

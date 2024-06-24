@@ -34,19 +34,19 @@ fn handle_file(
             break;
         }
         if !compare_lines(&prev_line, &curr_line, flags.ignore_case) {
-            log_data(&mut output_file, counter, &prev_line, &flags)?;
+            log_data(&mut output_file, counter, &prev_line, flags)?;
             prev_line = curr_line.clone();
             counter = 0;
         }
         counter += 1;
         curr_line.clear();
     }
-    log_data(&mut output_file, counter, &prev_line, &flags)?;
+    log_data(&mut output_file, counter, &prev_line, flags)?;
     Ok(())
 }
 
 //----------------------
-fn get_output_file(out_file: Option<&str>) -> Result<Box<dyn Write>, anyhow::Error> {
+fn get_output_file(out_file: Option<&str>) -> Result<Box<dyn Write>> {
     let output_file: Box<dyn Write> = match out_file {
         Some(out_name) => Box::new(File::create(out_name)?),
         _ => Box::new(io::stdout()),
@@ -87,6 +87,6 @@ fn format_data(flag: bool, counter: u64, text: &str) -> String {
     } else if flag {
         format!("{counter:>4} {text}")
     } else {
-        format!("{text}")
+        text.to_string()
     }
 }

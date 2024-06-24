@@ -77,7 +77,7 @@ fn handle_file(
     words: bool,
     bytes: bool,
     chars: bool,
-    filename: &String,
+    filename: &str,
     total_lines: &mut usize,
     total_words: &mut usize,
     total_bytes: &mut usize,
