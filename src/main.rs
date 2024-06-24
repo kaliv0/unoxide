@@ -1,8 +1,8 @@
-use cli::Cli;
-
 mod cli;
 mod handlers;
 mod utils;
+
+use cli::Cli;
 
 fn main() {
     if let Err(e) = Cli::run() {

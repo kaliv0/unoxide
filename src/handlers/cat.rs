@@ -1,8 +1,8 @@
-use crate::utils::{display_error, file_reader};
 use anyhow::Result;
 use std::io::BufRead;
 
-// #[named]
+use crate::utils::{display_error, file_reader};
+
 pub fn cat(
     files: &[String],
     number_lines: bool,

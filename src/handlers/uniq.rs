@@ -1,11 +1,12 @@
-use crate::{
-    cli::UniqFlags,
-    utils::{display_error, file_reader},
-};
 use anyhow::Result;
 use std::{
     fs::File,
     io::{self, BufRead, Write},
+};
+
+use crate::{
+    cli::UniqFlags,
+    utils::{display_error, file_reader},
 };
 
 pub fn uniq(in_file: &str, out_file: Option<&str>, flags: &UniqFlags) -> Result<()> {

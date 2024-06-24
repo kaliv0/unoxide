@@ -9,6 +9,8 @@
 - should we pass &str instead of String unless necessary?
 - refactor cat to use line_buffer instead of file.lines (e.g. uniq) or vice versa
 - research about passing and returning  Box<dyn Write> between functions
+- find -> add -size and -delete
+- re-arrange mods and usings in all files
 <br><br>
 ------------------
 cargo clippy -- --allow clippy::too_many_arguments

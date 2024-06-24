@@ -1,6 +1,7 @@
-use crate::utils::{display_error, file_reader};
 use anyhow::Result;
 use std::io::BufRead;
+
+use crate::utils::{display_error, file_reader};
 
 #[derive(Debug, PartialEq)]
 struct FileData {

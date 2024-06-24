@@ -4,7 +4,13 @@ use walkdir::{DirEntry, WalkDir};
 
 use crate::{cli::EntryType, utils::display_error};
 
-pub fn find(paths: &[String], names: &[Regex], entry_types: &[EntryType]) -> Result<()> {
+pub fn find(
+    paths: &[String],
+    names: &[Regex],
+    entry_types: &[EntryType],
+    min_depth: usize,
+    max_depth: usize,
+) -> Result<()> {
     let type_filter = |entry: &DirEntry| {
         entry_types.is_empty()
             || entry_types.iter().any(|entry_type| match entry_type {
@@ -23,10 +29,12 @@ pub fn find(paths: &[String], names: &[Regex], entry_types: &[EntryType]) -> Res
 
     for path in paths {
         let entries = WalkDir::new(path)
+            .min_depth(min_depth)
+            .max_depth(max_depth)
             .into_iter()
             .filter_map(|e| match e {
                 Err(e) => {
-                    display_error("find", path, &anyhow::Error::from(e));
+                    display_error("find", path, &anyhow::Error::from(e)); // fix error?
                     None
                 }
                 Ok(entry) => Some(entry),

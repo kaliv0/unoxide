@@ -1,9 +1,10 @@
 pub mod help_messages;
 pub mod subcommands;
 
-use crate::handlers::{cat::cat, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
 use anyhow::Result;
 use clap::{builder::PossibleValue, Parser, ValueEnum};
+
+use crate::handlers::{cat::cat, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
 use subcommands::Subcommands;
 
 #[derive(Parser)]
@@ -68,7 +69,9 @@ impl Cli {
                 paths,
                 names,
                 entry_types,
-            } => find(&paths, &names, &entry_types),
+                min_depth,
+                max_depth,
+            } => find(&paths, &names, &entry_types, min_depth, max_depth),
             // _ => Ok(()), // throw error?
         }
     }
