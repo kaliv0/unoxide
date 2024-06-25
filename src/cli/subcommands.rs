@@ -1,7 +1,7 @@
 use clap::{ArgAction, Subcommand};
 use regex::Regex;
 
-use super::help_messages;
+use super::{help_messages, ArgsExtract};
 use crate::cli::EntryType;
 
 #[derive(Subcommand)]
@@ -141,7 +141,7 @@ pub enum Subcommands {
         #[arg(
             long,
             value_name = "LEVELS",
-            value_parser = clap::value_parser!(usize), //remove?
+            value_parser = clap::value_parser!(usize),
             default_value = "0"
         )]
         min_depth: usize,
@@ -149,7 +149,7 @@ pub enum Subcommands {
         #[arg(
             long,
             value_name = "LEVELS",
-            value_parser = clap::value_parser!(usize), //remove?
+            value_parser = clap::value_parser!(usize),
             default_value_t = usize::MAX
         )]
         max_depth: usize,
@@ -157,5 +157,16 @@ pub enum Subcommands {
         - size?
         - delete?
          */
+    },
+    #[clap(about = "")]
+    Cut {
+        #[arg(default_value = "-")]
+        files: Vec<String>,
+
+        #[arg(short, long, value_name = "DELIMITER", default_value = "\t")]
+        delimiter: String,
+
+        #[command(flatten)]
+        args_extract: ArgsExtract,
     },
 }

@@ -11,6 +11,7 @@
 - research about passing and returning  Box<dyn Write> between functions
 - find -> add -size and -delete
 - re-arrange mods and usings in all files
+- cut -> research how to handle extract.copy() etc
 <br><br>
 ------------------
 cargo clippy -- --allow clippy::too_many_arguments

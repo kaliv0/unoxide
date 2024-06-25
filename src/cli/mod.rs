@@ -3,8 +3,9 @@ pub mod subcommands;
 
 use anyhow::Result;
 use clap::{builder::PossibleValue, Parser, ValueEnum};
+use std::ops::Range;
 
-use crate::handlers::{cat::cat, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
+use crate::handlers::{cat::cat, cut::cut, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
 use subcommands::Subcommands;
 
 #[derive(Parser)]
@@ -72,13 +73,19 @@ impl Cli {
                 min_depth,
                 max_depth,
             } => find(&paths, &names, &entry_types, min_depth, max_depth),
-            // _ => Ok(()), // throw error?
+            Subcommands::Cut {
+                files,
+                delimiter,
+                args_extract,
+            } => cut(&files, &delimiter, &args_extract), // do ew need to move and not borrow extract?
+                                                         // _ => Ok(()), // throw error?
         }
     }
 }
 
 //--------------
 //move to util file?
+// uniq
 pub struct UniqFlags {
     pub show_count: bool,
     pub show_unique: bool,
@@ -87,6 +94,7 @@ pub struct UniqFlags {
 }
 
 //--------------
+// find
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub enum EntryType {
     Dir,
@@ -106,4 +114,31 @@ impl ValueEnum for EntryType {
             EntryType::Link => PossibleValue::new("l"),
         })
     }
+}
+
+//--------------
+// cut
+#[derive(clap::Args, Debug, Clone)]
+#[group(required = true, multiple = false)]
+pub struct ArgsExtract {
+    /// Selected fields
+    #[arg(short, long, value_name = "FIELDS")]
+    pub fields: Option<String>,
+
+    /// Selected bytes
+    #[arg(short, long, value_name = "BYTES")]
+    pub bytes: Option<String>,
+
+    /// Selected chars
+    #[arg(short, long, value_name = "CHARS")]
+    pub chars: Option<String>,
+}
+
+pub type PositionList = Vec<Range<usize>>;
+
+#[derive(Debug)]
+pub enum Extract {
+    Fields(PositionList),
+    Bytes(PositionList),
+    Chars(PositionList),
 }
