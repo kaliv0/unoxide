@@ -158,15 +158,24 @@ pub enum Subcommands {
         - delete?
          */
     },
-    #[clap(about = "")]
+    #[clap(about = help_messages::CUT)]
     Cut {
         #[arg(default_value = "-")]
         files: Vec<String>,
 
+        /// use DELIM instead of TAB for field delimiter
         #[arg(short, long, value_name = "DELIMITER", default_value = "\t")]
         delimiter: String,
 
+        /// use STRING as the output delimiter; the default is to use the input delimiter
+        #[arg(long, value_name = "DELIMITER")]
+        output_delimiter: Option<String>,
+
         #[command(flatten)]
-        args_extract: ArgsExtract,
+        extract: ArgsExtract,
+        /*
+        - enable partial ranges (3-, -5) -> use std::ops::RangeTo/RangeFrom
+        - add optional outputfile name (defaults to STDOUT)?
+         */
     },
 }

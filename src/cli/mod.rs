@@ -76,9 +76,10 @@ impl Cli {
             Subcommands::Cut {
                 files,
                 delimiter,
-                args_extract,
-            } => cut(&files, &delimiter, &args_extract), // do ew need to move and not borrow extract?
-                                                         // _ => Ok(()), // throw error?
+                output_delimiter,
+                extract,
+            } => cut(&files, &delimiter, output_delimiter.as_deref(), &extract), // do we need to move and not borrow extract?
+                                                                                 // _ => Ok(()), // throw error?
         }
     }
 }
@@ -121,15 +122,15 @@ impl ValueEnum for EntryType {
 #[derive(clap::Args, Debug, Clone)]
 #[group(required = true, multiple = false)]
 pub struct ArgsExtract {
-    /// Selected fields
+    /// select only these fields
     #[arg(short, long, value_name = "FIELDS")]
     pub fields: Option<String>,
 
-    /// Selected bytes
+    /// select only these bytes
     #[arg(short, long, value_name = "BYTES")]
     pub bytes: Option<String>,
 
-    /// Selected chars
+    /// select only these characters
     #[arg(short, long, value_name = "CHARS")]
     pub chars: Option<String>,
 }

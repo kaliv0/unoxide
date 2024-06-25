@@ -12,6 +12,7 @@
 - find -> add -size and -delete
 - re-arrange mods and usings in all files
 - cut -> research how to handle extract.copy() etc
+- refactor chained closures in 'cut' and split into small separate functions
 <br><br>
 ------------------
 cargo clippy -- --allow clippy::too_many_arguments

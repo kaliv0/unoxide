@@ -12,14 +12,24 @@ use crate::{
     utils::{display_error, file_reader},
 };
 
-pub fn cut(files: &[String], delimiter: &str, args_extract: &ArgsExtract) -> Result<()> {
-    let delimiter = parse_delimiter(delimiter)?;
-    let extract = parse_extract(args_extract.to_owned())?; //other ways to handle this?
+pub fn cut(
+    files: &[String],
+    delimiter: &str,
+    output_delimiter: Option<&str>,
+    extract: &ArgsExtract,
+) -> Result<()> {
+    let delimiter_val = parse_delimiter(delimiter)?;
+    let output_delimiter_val = match output_delimiter {
+        Some(val) => parse_delimiter(val)?,
+        None => delimiter_val,
+    };
+
+    let extract_val = parse_extract(extract.to_owned())?; //other ways to handle this?
 
     for filename in files {
         match file_reader::open(filename) {
             Err(e) => display_error("cut", filename, &e),
-            Ok(file) => handle_file(file, delimiter, &extract)?,
+            Ok(file) => handle_file(file, delimiter_val, output_delimiter_val, &extract_val)?,
         }
     }
     Ok(())
@@ -28,16 +38,16 @@ pub fn cut(files: &[String], delimiter: &str, args_extract: &ArgsExtract) -> Res
 //--------------
 // helpers
 fn parse_delimiter(delimiter: &str) -> Result<u8> {
-    let delim_bytes = delimiter.as_bytes();
-    if delim_bytes.len() != 1 {
+    let delimiter_bytes = delimiter.as_bytes();
+    if delimiter_bytes.len() != 1 {
         bail!("cut: delimiter must be a single byte");
     }
-    let delimiter: u8 = *delim_bytes.first().unwrap();
-    Ok(delimiter)
+    let delimiter_val: u8 = *delimiter_bytes.first().unwrap();
+    Ok(delimiter_val)
 }
 
 fn parse_extract(extract: ArgsExtract) -> Result<Extract> {
-    let extract = if let Some(fields) = extract.fields.map(parse_positions).transpose()? {
+    let extract_val = if let Some(fields) = extract.fields.map(parse_positions).transpose()? {
         Extract::Fields(fields)
     } else if let Some(bytes) = extract.bytes.map(parse_positions).transpose()? {
         Extract::Bytes(bytes)
@@ -46,41 +56,9 @@ fn parse_extract(extract: ArgsExtract) -> Result<Extract> {
     } else {
         unreachable!("Must have --fields, --bytes, or --chars");
     };
-    Ok(extract)
+    Ok(extract_val)
 }
 
-//--------------
-fn handle_file(file: Box<dyn BufRead>, delimiter: u8, extract: &Extract) -> Result<()> {
-    match &extract {
-        Extract::Fields(field_positions) => {
-            let mut reader = ReaderBuilder::new()
-                .delimiter(delimiter)
-                .has_headers(false)
-                .from_reader(file);
-
-            let mut writer = WriterBuilder::new()
-                .delimiter(delimiter)
-                .from_writer(io::stdout());
-
-            for record in reader.records() {
-                writer.write_record(extract_fields(&record?, field_positions))?;
-            }
-        }
-        Extract::Bytes(byte_positions) => {
-            for line in file.lines() {
-                println!("{}", extract_bytes(&line?, byte_positions));
-            }
-        }
-        Extract::Chars(char_positions) => {
-            for line in file.lines() {
-                println!("{}", extract_chars(&line?, char_positions));
-            }
-        }
-    }
-    Ok(())
-}
-
-//--------------
 fn parse_positions(range: String) -> Result<PositionList> {
     let range_regex = Regex::new(r"^(\d+)-(\d+)$").unwrap();
     //refactor and simplify
@@ -119,17 +97,43 @@ fn parse_index(input: &str) -> Result<usize> {
                 .map(|n| usize::from(n) - 1)
                 .map_err(|_| value_error())
         })
-
-    // if input.starts_with("+") {
-    //     Err(value_error())
-    // } else {
-    //     input
-    //         .parse::<NonZeroUsize>()
-    //         .map(|n| usize::from(n) - 1)
-    //         .map_err(|_| value_error())
-    // }
 }
 
+// -------------------
+fn handle_file(
+    file: Box<dyn BufRead>,
+    delimiter: u8,
+    output_delimiter: u8,
+    extract: &Extract,
+) -> Result<()> {
+    match &extract {
+        Extract::Fields(field_positions) => {
+            let mut reader = ReaderBuilder::new()
+                .delimiter(delimiter)
+                .has_headers(false)
+                .from_reader(file);
+
+            let mut writer = WriterBuilder::new()
+                .delimiter(output_delimiter)
+                .from_writer(io::stdout());
+
+            for record in reader.records() {
+                writer.write_record(extract_fields(&record?, field_positions))?;
+            }
+        }
+        Extract::Bytes(byte_positions) => {
+            for line in file.lines() {
+                println!("{}", extract_bytes(&line?, byte_positions));
+            }
+        }
+        Extract::Chars(char_positions) => {
+            for line in file.lines() {
+                println!("{}", extract_chars(&line?, char_positions));
+            }
+        }
+    }
+    Ok(())
+}
 // -------------------
 fn extract_fields<'a>(record: &'a StringRecord, field_positions: &[Range<usize>]) -> Vec<&'a str> {
     field_positions
