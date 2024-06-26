@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use crate::utils::{display_error, file_reader};
+use super::helpers::{error_handler::display_error, file_reader::open_file};
 
 pub fn head(
     files: &[String],
@@ -12,7 +12,7 @@ pub fn head(
 ) -> Result<()> {
     let num_files = files.len();
     for (file_num, filename) in files.iter().enumerate() {
-        match file_reader::open(filename) {
+        match open_file(filename) {
             Err(e) => display_error("head", filename, &e),
             Ok(file) => {
                 handle_file(

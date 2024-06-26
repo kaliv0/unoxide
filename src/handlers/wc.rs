@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use crate::utils::{display_error, file_reader};
+use super::helpers::{error_handler::display_error, file_reader::open_file};
 
 #[derive(Debug, PartialEq)]
 struct FileData {
@@ -26,7 +26,7 @@ pub fn wc(
     let mut total_bytes = 0;
     let mut total_chars = 0;
     for filename in files {
-        match file_reader::open(filename) {
+        match open_file(filename) {
             Err(e) => display_error("wc", filename, &e),
             Ok(file) => {
                 handle_file(

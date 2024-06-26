@@ -4,13 +4,11 @@ use std::{
     io::{self, BufRead, Write},
 };
 
-use crate::{
-    cli::UniqFlags,
-    utils::{display_error, file_reader},
-};
+use super::helpers::{error_handler::display_error, file_reader::open_file};
+use crate::utils::uniq_flags::UniqFlags;
 
 pub fn uniq(in_file: &str, out_file: Option<&str>, flags: &UniqFlags) -> Result<()> {
-    match file_reader::open(in_file) {
+    match open_file(in_file) {
         Err(e) => display_error("uniq", in_file, &e),
         Ok(file) => {
             handle_file(file, out_file, flags)?;

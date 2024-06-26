@@ -2,7 +2,8 @@ use anyhow::Result;
 use regex::Regex;
 use walkdir::{DirEntry, WalkDir};
 
-use crate::{cli::EntryType, utils::display_error};
+use super::helpers::error_handler::display_error;
+use crate::utils::entry_type::EntryType;
 
 pub fn find(
     paths: &[String],

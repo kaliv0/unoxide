@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use crate::utils::{display_error, file_reader};
+use super::helpers::{error_handler::display_error, file_reader::open_file};
 
 pub fn cat(
     files: &[String],
@@ -10,7 +10,7 @@ pub fn cat(
     squeeze_blank_lines: bool,
 ) -> Result<()> {
     for filename in files {
-        match file_reader::open(filename) {
+        match open_file(filename) {
             Err(e) => display_error("cat", filename, &e),
             Ok(file) => {
                 handle_file(
