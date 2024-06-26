@@ -2,7 +2,9 @@ use anyhow::Result;
 use clap::Parser;
 
 use super::subcommands::Subcommands;
-use crate::handlers::{cat::cat, cut::cut, echo::echo, find::find, head::head, uniq::uniq, wc::wc};
+use crate::handlers::{
+    cat::cat, cut::cut, echo::echo, find::find, grep::grep, head::head, uniq::uniq, wc::wc,
+};
 use crate::utils::uniq_flags::UniqFlags;
 
 #[derive(Parser)]
@@ -75,8 +77,17 @@ impl Cli {
                 delimiter,
                 output_delimiter,
                 extract,
-            } => cut(&files, &delimiter, output_delimiter.as_deref(), &extract), // do we need to move and not borrow extract?
-                                                                                 // _ => Ok(()), // throw error?
+            } => cut(&files, &delimiter, output_delimiter.as_deref(), &extract),
+            // do we need to move and not borrow extract?
+            Subcommands::Grep {
+                pattern,
+                files,
+                insensitive,
+                recursive,
+                count,
+                invert,
+            } => grep(&pattern, &files, insensitive, recursive, count, invert),
+            // _ => Ok(()), // throw error?
         }
     }
 }

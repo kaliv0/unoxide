@@ -178,4 +178,24 @@ pub enum Subcommands {
         - add optional outputfile name (defaults to STDOUT)?
          */
     },
+    #[clap(about = "")]
+    Grep {
+        #[arg()]
+        pattern: String,
+
+        #[arg(value_name = "FILE", default_value = "-")]
+        files: Vec<String>,
+
+        #[arg(short, long)]
+        insensitive: bool,
+
+        #[arg(short, long)]
+        recursive: bool,
+
+        #[arg(short, long)]
+        count: bool,
+
+        #[arg(short('v'), long("invert-match"))]
+        invert: bool,
+    },
 }
