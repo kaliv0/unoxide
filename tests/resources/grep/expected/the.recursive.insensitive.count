@@ -1,0 +1,4 @@
+./tests/resources/grep/inputs/empty.txt:0
+./tests/resources/grep/inputs/fox.txt:1
+./tests/resources/grep/inputs/bustle.txt:3
+./tests/resources/grep/inputs/nobody.txt:3

@@ -82,11 +82,11 @@ impl Cli {
             Subcommands::Grep {
                 pattern,
                 files,
-                insensitive,
+                ignore_case,
                 recursive,
                 count,
                 invert,
-            } => grep(&pattern, &files, insensitive, recursive, count, invert),
+            } => grep(&pattern, &files, ignore_case, recursive, count, invert),
             // _ => Ok(()), // throw error?
         }
     }

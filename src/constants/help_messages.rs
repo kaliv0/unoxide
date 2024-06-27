@@ -30,3 +30,5 @@ pub const CUT: &str = "Print selected parts of lines from each FILE to standard 
 
 With no FILE, or when FILE is -, read standard input.";
 //--------------
+pub const GREP: &str = "Search for PATTERNS in each FILE.";
+//--------------

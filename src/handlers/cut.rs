@@ -7,7 +7,7 @@ use std::{
     ops::Range,
 };
 
-use super::helpers::{error_handler::display_error, file_reader::open_file};
+use super::helpers::{error_handler::display_file_error, file_reader::open_file};
 use crate::utils::extract::{ArgsExtract, Extract, PositionList};
 
 pub fn cut(
@@ -26,7 +26,7 @@ pub fn cut(
 
     for filename in files {
         match open_file(filename) {
-            Err(e) => display_error("cut", filename, &e),
+            Err(e) => display_file_error("cut", filename, &e),
             Ok(file) => handle_file(file, delimiter_val, output_delimiter_val, &extract_val)?,
         }
     }
@@ -34,7 +34,6 @@ pub fn cut(
 }
 
 //--------------
-// helper functions
 fn parse_delimiter(delimiter: &str) -> Result<u8> {
     let delimiter_bytes = delimiter.as_bytes();
     if delimiter_bytes.len() != 1 {
@@ -59,7 +58,6 @@ fn parse_extract(extract: ArgsExtract) -> Result<Extract> {
 
 fn parse_positions(range: String) -> Result<PositionList> {
     let range_regex = Regex::new(r"^(\d+)-(\d+)$").unwrap();
-    //refactor and simplify
     range
         .split(',')
         .map(|val| {
@@ -68,24 +66,18 @@ fn parse_positions(range: String) -> Result<PositionList> {
                     let n1 = parse_index(&captures[1])?;
                     let n2 = parse_index(&captures[2])?;
                     if n1 > n2 {
-                        bail!(
-                            // "First number in range ({}) must be lower than second number ({})",
-                            // n1 + 1,
-                            // n2 + 1
-                            "cut: invalid decreasing range"
-                        );
+                        bail!("cut: invalid decreasing range");
                     }
                     Ok(n1..n2 + 1)
                 })
             })
         })
         .collect::<Result<PositionList>>()
-        .map_err(From::from) // do we need this?
+        .map_err(From::from)
 }
 
 fn parse_index(input: &str) -> Result<usize> {
     let value_error = || anyhow!(r#"cut: invalid extract value: `{input}`"#);
-    // TODO: refactor?
     input
         .starts_with('+')
         .then(|| Err(value_error()))

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use super::helpers::{error_handler::display_error, file_reader::open_file};
+use super::helpers::{error_handler::display_file_error, file_reader::open_file};
 
 pub fn head(
     files: &[String],
@@ -13,7 +13,7 @@ pub fn head(
     let num_files = files.len();
     for (file_num, filename) in files.iter().enumerate() {
         match open_file(filename) {
-            Err(e) => display_error("head", filename, &e),
+            Err(e) => display_file_error("head", filename, &e),
             Ok(file) => {
                 handle_file(
                     file, filename, num_files, file_num, bytes, lines, quiet, verbose,

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use super::helpers::{error_handler::display_error, file_reader::open_file};
+use super::helpers::{error_handler::display_file_error, file_reader::open_file};
 
 pub fn cat(
     files: &[String],
@@ -11,7 +11,7 @@ pub fn cat(
 ) -> Result<()> {
     for filename in files {
         match open_file(filename) {
-            Err(e) => display_error("cat", filename, &e),
+            Err(e) => display_file_error("cat", filename, &e),
             Ok(file) => {
                 handle_file(
                     file,

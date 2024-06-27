@@ -1,0 +1,4 @@
+./tests/resources/grep/inputs/bustle.txt:The bustle in a house
+./tests/resources/grep/inputs/bustle.txt:The morning after death
+./tests/resources/grep/inputs/bustle.txt:The sweeping up the heart,
+./tests/resources/grep/inputs/fox.txt:The quick brown fox jumps over the lazy dog.

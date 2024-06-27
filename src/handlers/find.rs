@@ -2,7 +2,7 @@ use anyhow::Result;
 use regex::Regex;
 use walkdir::{DirEntry, WalkDir};
 
-use super::helpers::error_handler::display_error;
+use super::helpers::error_handler::display_file_error;
 use crate::utils::entry_type::EntryType;
 
 pub fn find(
@@ -35,7 +35,8 @@ pub fn find(
             .into_iter()
             .filter_map(|e| match e {
                 Err(e) => {
-                    display_error("find", path, &anyhow::Error::from(e)); // fix error?
+                    // display_error("find", path, &anyhow::Error::from(e));
+                    display_file_error("find", path, &From::from(e));
                     None
                 }
                 Ok(entry) => Some(entry),

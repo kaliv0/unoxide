@@ -24,7 +24,7 @@ pub enum Subcommands {
         #[arg(short('n'), long("number"), conflicts_with("number_nonblank_lines"))]
         number_lines: bool,
 
-        /// show_nonempty_line_numbers
+        /// show nonempty_line_numbers
         #[arg(short('b'), long("number-nonblank"))]
         number_nonblank_lines: bool,
 
@@ -113,6 +113,7 @@ pub enum Subcommands {
         #[arg(short, long)]
         ignore_case: bool,
     },
+
     #[clap()]
     Find {
         #[arg(value_name = "PATH", default_value = ".")]
@@ -153,11 +154,8 @@ pub enum Subcommands {
             default_value_t = usize::MAX
         )]
         max_depth: usize,
-        /*
-        - size?
-        - delete?
-         */
     },
+
     #[clap(about = help_messages::CUT)]
     Cut {
         #[arg(default_value = "-")]
@@ -175,10 +173,10 @@ pub enum Subcommands {
         extract: ArgsExtract,
         /*
         - enable partial ranges (3-, -5) -> use std::ops::RangeTo/RangeFrom
-        - add optional outputfile name (defaults to STDOUT)?
          */
     },
-    #[clap(about = "")]
+
+    #[clap(about = help_messages::GREP)]
     Grep {
         #[arg()]
         pattern: String,
@@ -186,15 +184,19 @@ pub enum Subcommands {
         #[arg(value_name = "FILE", default_value = "-")]
         files: Vec<String>,
 
-        #[arg(short, long)]
-        insensitive: bool,
+        /// ignore case distinctions in patterns and data
+        #[arg(short, long("ignore-case"))]
+        ignore_case: bool,
 
+        /// handle directories recursively
         #[arg(short, long)]
         recursive: bool,
 
+        /// print found matches count
         #[arg(short, long)]
         count: bool,
 
+        /// select non-matching lines
         #[arg(short('v'), long("invert-match"))]
         invert: bool,
     },
