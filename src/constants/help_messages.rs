@@ -32,3 +32,10 @@ With no FILE, or when FILE is -, read standard input.";
 //--------------
 pub const GREP: &str = "Search for PATTERNS in each FILE.";
 //--------------
+pub const COMM: &str = "Compare sorted files FILE1 and FILE2 line by line.
+
+When FILE1 or FILE2 (not both) is -, read standard input.
+
+With no options, produce three-column output.  Column one contains
+lines unique to FILE1, column two contains lines unique to FILE2,
+and column three contains lines common to both files.";

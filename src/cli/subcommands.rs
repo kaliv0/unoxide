@@ -200,4 +200,33 @@ pub enum Subcommands {
         #[arg(short('v'), long("invert-match"))]
         invert: bool,
     },
+
+    #[clap(about = help_messages::COMM)]
+    Comm {
+        #[arg()]
+        file_1: String,
+
+        #[arg()]
+        file_2: String,
+
+        /// suppress column 1 (lines unique to FILE1)
+        #[arg(short('1'), action(ArgAction::SetFalse))]
+        show_col_1: bool,
+
+        /// suppress column 2 (lines unique to FILE2)
+        #[arg(short('2'), action(ArgAction::SetFalse))]
+        show_col_2: bool,
+
+        /// suppress column 3 (lines that appear in both files)
+        #[arg(short('3'), action(ArgAction::SetFalse))]
+        show_col_3: bool,
+
+        /// ignore case distinctions in comparison of lines
+        #[arg(short, long("ignore-case"))]
+        ignore_case: bool,
+
+        /// separate columns with given delimiter
+        #[arg(short, long("output-delimiter"), default_value = "\t")]
+        delimiter: String,
+    },
 }

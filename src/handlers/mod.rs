@@ -1,4 +1,5 @@
 pub mod cat;
+pub mod comm;
 pub mod cut;
 pub mod echo;
 pub mod find;

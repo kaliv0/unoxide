@@ -8,6 +8,10 @@
 - find -> add -size and -delete?
 - cut -> research how to handle extract.copy() etc
 - extract error messages to const file
+- rename poject and main command
+- rearrange and combine utils (most of them enums)
+- remove empty lines from help messages
+- after refactoring tests -> remove sys-info (used for 'Windows' tests)
 <br><br>
 ------------------
 cargo clippy -- --allow clippy::too_many_arguments

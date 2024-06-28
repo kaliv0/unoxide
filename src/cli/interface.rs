@@ -2,6 +2,7 @@ use anyhow::Result;
 use clap::Parser;
 
 use super::subcommands::Subcommands;
+use crate::handlers::comm::comm;
 use crate::handlers::{
     cat::cat, cut::cut, echo::echo, find::find, grep::grep, head::head, uniq::uniq, wc::wc,
 };
@@ -78,7 +79,6 @@ impl Cli {
                 output_delimiter,
                 extract,
             } => cut(&files, &delimiter, output_delimiter.as_deref(), &extract),
-            // do we need to move and not borrow extract?
             Subcommands::Grep {
                 pattern,
                 files,
@@ -87,6 +87,23 @@ impl Cli {
                 count,
                 invert,
             } => grep(&pattern, &files, ignore_case, recursive, count, invert),
+            Subcommands::Comm {
+                file_1,
+                file_2,
+                show_col_1,
+                show_col_2,
+                show_col_3,
+                ignore_case,
+                delimiter,
+            } => comm(
+                &file_1,
+                &file_2,
+                show_col_1,
+                show_col_2,
+                show_col_3,
+                ignore_case,
+                &delimiter,
+            ),
             // _ => Ok(()), // throw error?
         }
     }
