@@ -229,4 +229,19 @@ pub enum Subcommands {
         #[arg(short, long("output-delimiter"), default_value = "\t")]
         delimiter: String,
     },
+
+    #[clap(about = "")]
+    Tail {
+        #[arg(required = true)]
+        files: Vec<String>,
+
+        #[arg(short('n'), long, value_name = "LINES", default_value = "10")]
+        lines: String,
+
+        #[arg(short('c'), long, value_name = "BYTES", conflicts_with("lines"))]
+        bytes: Option<String>,
+
+        #[arg(short, long)]
+        quiet: bool,
+    },
 }

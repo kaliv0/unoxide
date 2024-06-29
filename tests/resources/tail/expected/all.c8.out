@@ -1,0 +1,14 @@
+==> ./tests/resources/tail/inputs/twelve.txt <==
+
+twelve
+
+==> ./tests/resources/tail/inputs/empty.txt <==
+
+==> ./tests/resources/tail/inputs/one.txt <==
+wordś.
+
+==> ./tests/resources/tail/inputs/three.txt <==
+ words.
+
+==> ./tests/resources/tail/inputs/two.txt <==
+ words.

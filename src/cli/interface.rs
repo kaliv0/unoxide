@@ -3,6 +3,7 @@ use clap::Parser;
 
 use super::subcommands::Subcommands;
 use crate::handlers::comm::comm;
+use crate::handlers::tail::tail;
 use crate::handlers::{
     cat::cat, cut::cut, echo::echo, find::find, grep::grep, head::head, uniq::uniq, wc::wc,
 };
@@ -104,6 +105,12 @@ impl Cli {
                 ignore_case,
                 &delimiter,
             ),
+            Subcommands::Tail {
+                files,
+                lines,
+                bytes,
+                quiet,
+            } => tail(&files, lines, bytes, quiet),
             // _ => Ok(()), // throw error?
         }
     }

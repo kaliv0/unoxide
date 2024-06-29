@@ -14,4 +14,4 @@
 - after refactoring tests -> remove sys-info (used for 'Windows' tests)
 <br><br>
 ------------------
-cargo clippy -- --allow clippy::too_many_arguments
+cargo clippy -- --allow clippy::too_many_argumentssys-info
