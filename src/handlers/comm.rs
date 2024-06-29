@@ -2,7 +2,12 @@ use anyhow::{bail, Result};
 use std::{cmp::Ordering::*, io::BufRead};
 
 use super::helpers::file_reader::open_file_map_err;
-use crate::utils::comm_column::Column::{self, Col1, Col2, Col3};
+
+pub enum Column<'a> {
+    Col1(&'a str),
+    Col2(&'a str),
+    Col3(&'a str),
+}
 
 pub fn comm(
     file_1: &str,
@@ -27,25 +32,25 @@ pub fn comm(
         match (&line_1, &line_2) {
             (Some(val_1), Some(val_2)) => match val_1.cmp(val_2) {
                 Equal => {
-                    log(Col3(val_1));
+                    log(Column::Col3(val_1));
                     line_1 = file_1_lines.next();
                     line_2 = file_2_lines.next();
                 }
                 Less => {
-                    log(Col1(val_1));
+                    log(Column::Col1(val_1));
                     line_1 = file_1_lines.next();
                 }
                 Greater => {
-                    log(Col2(val_2));
+                    log(Column::Col2(val_2));
                     line_2 = file_2_lines.next();
                 }
             },
             (Some(val_1), None) => {
-                log(Col1(val_1));
+                log(Column::Col1(val_1));
                 line_1 = file_1_lines.next();
             }
             (None, Some(val_2)) => {
-                log(Col2(val_2));
+                log(Column::Col2(val_2));
                 line_2 = file_2_lines.next();
             }
             _ => (),
@@ -71,12 +76,12 @@ fn log_data(
     move |col: Column| {
         let mut columns = vec![];
         match col {
-            Col1(val) => {
+            Column::Col1(val) => {
                 if show_col_1 {
                     columns.push(val);
                 }
             }
-            Col2(val) => {
+            Column::Col2(val) => {
                 if show_col_2 {
                     if show_col_1 {
                         columns.push("");
@@ -84,7 +89,7 @@ fn log_data(
                     columns.push(val);
                 }
             }
-            Col3(val) => {
+            Column::Col3(val) => {
                 if show_col_3 {
                     if show_col_1 {
                         columns.push("");

@@ -1,7 +1,10 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use super::helpers::{error_handler::display_file_error, file_reader::open_file};
+use super::helpers::{
+    file_reader::open_file,
+    logging::{display_file_error, display_file_header},
+};
 
 pub fn head(
     files: &[String],
@@ -10,13 +13,19 @@ pub fn head(
     quiet: bool,
     verbose: bool,
 ) -> Result<()> {
-    let num_files = files.len();
     for (file_num, filename) in files.iter().enumerate() {
         match open_file(filename) {
             Err(e) => display_file_error("head", filename, &e),
             Ok(file) => {
                 handle_file(
-                    file, filename, num_files, file_num, bytes, lines, quiet, verbose,
+                    file,
+                    filename,
+                    files.len(),
+                    file_num,
+                    bytes,
+                    lines,
+                    quiet,
+                    verbose,
                 )?;
             }
         }
@@ -26,21 +35,16 @@ pub fn head(
 
 fn handle_file(
     mut file: Box<dyn BufRead>,
-    filename: &String,
-    num_files: usize,
+    filename: &str,
+    files_count: usize,
     file_num: usize,
     bytes: Option<u64>,
     lines: u64,
     quiet: bool,
     verbose: bool,
 ) -> Result<()> {
-    if verbose || (num_files > 1 && !quiet) {
-        println!(
-            "{}==> {} <==",
-            if file_num > 0 { "\n" } else { "" },
-            filename
-        );
-    }
+    display_file_header(filename, quiet, verbose, files_count, file_num);
+
     if let Some(num_bytes) = bytes {
         let mut buffer = vec![0; num_bytes as usize];
         let bytes_read = file.read(&mut buffer)?;

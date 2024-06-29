@@ -1,2 +1,2 @@
-pub mod error_handler;
 pub mod file_reader;
+pub mod logging;

@@ -38,7 +38,7 @@ pub enum Subcommands {
         #[arg(value_name = "FILE", default_value = "-")]
         files: Vec<String>,
 
-        /// print the first NUM lines instead of the first 10;
+        /// print the first NUM lines instead of the first 10
         #[arg(
             short('n'),
             long,
@@ -230,18 +230,25 @@ pub enum Subcommands {
         delimiter: String,
     },
 
-    #[clap(about = "")]
+    #[clap(about = help_messages::TAIL)]
     Tail {
         #[arg(required = true)]
         files: Vec<String>,
 
+        /// print the first NUM lines instead of the last 10
         #[arg(short('n'), long, value_name = "LINES", default_value = "10")]
         lines: String,
 
+        /// print the last NUM bytes of each file
         #[arg(short('c'), long, value_name = "BYTES", conflicts_with("lines"))]
         bytes: Option<String>,
 
-        #[arg(short, long)]
+        /// never print headers giving file names
+        #[arg(short, long("quiet"), visible_alias = "silent")]
         quiet: bool,
+
+        /// always print headers giving file names
+        #[arg(short, long, conflicts_with("quiet"))]
+        verbose: bool,
     },
 }

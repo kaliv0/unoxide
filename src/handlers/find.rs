@@ -2,7 +2,7 @@ use anyhow::Result;
 use regex::Regex;
 use walkdir::{DirEntry, WalkDir};
 
-use super::helpers::error_handler::display_file_error;
+use super::helpers::logging::display_file_error;
 use crate::utils::entry_type::EntryType;
 
 pub fn find(

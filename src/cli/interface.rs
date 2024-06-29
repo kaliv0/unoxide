@@ -110,7 +110,8 @@ impl Cli {
                 lines,
                 bytes,
                 quiet,
-            } => tail(&files, lines, bytes, quiet),
+                verbose,
+            } => tail(&files, lines, bytes, quiet, verbose),
             // _ => Ok(()), // throw error?
         }
     }

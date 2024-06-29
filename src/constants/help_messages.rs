@@ -39,3 +39,8 @@ When FILE1 or FILE2 (not both) is -, read standard input.
 With no options, produce three-column output.  Column one contains
 lines unique to FILE1, column two contains lines unique to FILE2,
 and column three contains lines common to both files.";
+//--------------
+pub const TAIL: &str = "Print the last 10 lines of each FILE to standard output.
+With more than one FILE, precede each with a header giving the file name.
+
+With no FILE, or when FILE is -, read standard input.";

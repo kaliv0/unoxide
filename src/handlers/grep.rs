@@ -4,8 +4,8 @@ use std::{fs, io::BufRead, mem};
 use walkdir::WalkDir;
 
 use super::helpers::{
-    error_handler::{display_error, display_file_error},
     file_reader::open_file,
+    logging::{display_error, display_file_error},
 };
 
 pub fn grep(

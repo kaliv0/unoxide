@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::BufRead;
 
-use super::helpers::{error_handler::display_file_error, file_reader::open_file};
+use super::helpers::{file_reader::open_file, logging::display_file_error};
 
 pub fn cat(
     files: &[String],

@@ -7,7 +7,7 @@ use std::{
     ops::Range,
 };
 
-use super::helpers::{error_handler::display_file_error, file_reader::open_file};
+use super::helpers::{file_reader::open_file, logging::display_file_error};
 use crate::utils::extract::{ArgsExtract, Extract, PositionList};
 
 pub fn cut(
@@ -22,8 +22,7 @@ pub fn cut(
         None => delimiter_val,
     };
 
-    let extract_val = parse_extract(extract.to_owned())?; //other ways to handle this?
-
+    let extract_val = parse_extract(extract.to_owned())?;
     for filename in files {
         match open_file(filename) {
             Err(e) => display_file_error("cut", filename, &e),

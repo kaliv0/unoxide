@@ -4,7 +4,7 @@ use std::{
     io::{self, BufRead, Write},
 };
 
-use super::helpers::{error_handler::display_file_error, file_reader::open_file};
+use super::helpers::{file_reader::open_file, logging::display_file_error};
 use crate::utils::uniq_flags::UniqFlags;
 
 pub fn uniq(in_file: &str, out_file: Option<&str>, flags: &UniqFlags) -> Result<()> {
