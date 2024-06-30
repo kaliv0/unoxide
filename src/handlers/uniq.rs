@@ -61,12 +61,10 @@ fn compare_lines(prev_line: &str, curr_line: &str, ignore_case: bool) -> bool {
     }
 }
 
-fn log_data(
-    mut output_file: impl io::Write,
-    counter: u64,
-    text: &str,
-    flags: &UniqFlags,
-) -> Result<()> {
+fn log_data<T>(mut output_file: T, counter: u64, text: &str, flags: &UniqFlags) -> Result<()>
+where
+    T: io::Write,
+{
     if (flags.show_unique && counter == 1)
         || (flags.show_repeated && counter > 1)
         || (!flags.show_unique && !flags.show_repeated)

@@ -44,7 +44,7 @@ pub fn grep(
 }
 
 //------------------
-fn build_regex_pattern(pattern: &str, ignore_case: bool) -> Result<Regex, anyhow::Error> {
+fn build_regex_pattern(pattern: &str, ignore_case: bool) -> Result<Regex> {
     let pattern = RegexBuilder::new(pattern)
         .case_insensitive(ignore_case)
         .build()
@@ -96,7 +96,6 @@ fn find_files(paths: &[String], recursive: bool) -> Vec<Result<String>> {
         })
 }
 
-// fn find_lines<T: BufRead>(mut file: T, pattern: &Regex, invert: bool) -> Result<Vec<String>> {
 fn find_lines(mut file: Box<dyn BufRead>, pattern: &Regex, invert: bool) -> Result<Vec<String>> {
     let mut matches = vec![];
     let mut line = String::new();

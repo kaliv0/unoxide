@@ -49,7 +49,7 @@ fn dies_no_args() -> Result<()> {
 #[test]
 fn dies_bad_bytes() -> Result<()> {
     let bad = random_string();
-    let expected = format!("illegal byte count -- {bad}");
+    let expected = format!("tail: invalid number of bytes: `{bad}`");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args(["-c", &bad, EMPTY])
@@ -64,7 +64,7 @@ fn dies_bad_bytes() -> Result<()> {
 #[test]
 fn dies_bad_lines() -> Result<()> {
     let bad = random_string();
-    let expected = format!("illegal line count -- {bad}");
+    let expected = format!("tail: invalid number of lines: `{bad}`");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args(["-n", &bad, EMPTY])

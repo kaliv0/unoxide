@@ -1,5 +1,6 @@
 use anyhow::{anyhow, bail, Result};
 use csv::{ReaderBuilder, StringRecord, WriterBuilder};
+use once_cell::sync::OnceCell;
 use regex::Regex;
 use std::{
     io::{self, BufRead},
@@ -9,6 +10,8 @@ use std::{
 
 use super::helpers::{file_reader::open_file, logging::display_file_error};
 use crate::utils::extract::{ArgsExtract, Extract, PositionList};
+
+static PATTERN: OnceCell<Regex> = OnceCell::new();
 
 pub fn cut(
     files: &[String],
@@ -56,7 +59,7 @@ fn parse_extract(extract: ArgsExtract) -> Result<Extract> {
 }
 
 fn parse_positions(range: String) -> Result<PositionList> {
-    let range_regex = Regex::new(r"^(\d+)-(\d+)$").unwrap();
+    let range_regex = PATTERN.get_or_init(|| Regex::new(r"^(\d+)-(\d+)$").unwrap());
     range
         .split(',')
         .map(|val| {

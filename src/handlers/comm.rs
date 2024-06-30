@@ -73,6 +73,7 @@ fn log_data(
     show_col_3: bool,
     delimiter: &str,
 ) -> impl for<'a> Fn(Column<'a>) + '_ {
+    // TODO: refactor
     move |col: Column| {
         let mut columns = vec![];
         match col {
@@ -107,6 +108,7 @@ fn log_data(
     }
 }
 
+//TODO: refactor return type
 fn prepare_line_iterator(file: &str, ignore_case: bool) -> Result<impl Iterator<Item = String>> {
     let lines = open_file_map_err(file, "comm")? //TODO: extract const
         .lines()
