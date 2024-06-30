@@ -250,5 +250,9 @@ pub enum Subcommands {
         /// always print headers giving file names
         #[arg(short, long, conflicts_with("quiet"))]
         verbose: bool,
+
+        /// output appended data as the file grows
+        #[arg(short, long)]
+        follow: bool,
     },
 }

@@ -4,11 +4,14 @@ use regex::Regex;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Read, Seek, SeekFrom},
+    thread,
+    time::{self, Duration},
 };
 
 use super::helpers::logging::{display_file_error, display_file_header};
 
 static PATTERN: OnceCell<Regex> = OnceCell::new();
+const SLEEP_INTERVAL: Duration = time::Duration::from_secs(1);
 
 pub fn tail(
     files: &[String],
@@ -16,6 +19,7 @@ pub fn tail(
     bytes: Option<String>,
     quiet: bool,
     verbose: bool,
+    follow: bool,
 ) -> Result<()> {
     let (lines_count, bytes_count) = parse_lines_bytes(lines, bytes)?;
     for (file_num, filename) in files.iter().enumerate() {
@@ -29,6 +33,7 @@ pub fn tail(
                     files.len(),
                     quiet,
                     verbose,
+                    follow,
                     lines_count,
                     bytes_count,
                 )?;
@@ -45,13 +50,17 @@ fn handle_file(
     files_count: usize,
     quiet: bool,
     verbose: bool,
+    follow: bool,
     lines_count: i64,
     bytes_count: Option<i64>,
 ) -> Result<()> {
     display_file_header(filename, quiet, verbose, files_count, file_num);
     let (total_lines, total_bytes) = count_lines_bytes(filename)?;
+
     let file = BufReader::new(file);
-    if let Some(bytes_count) = bytes_count {
+    if follow {
+        follow_file(file)?;
+    } else if let Some(bytes_count) = bytes_count {
         print_bytes(file, bytes_count, total_bytes)?;
     } else {
         print_lines(file, lines_count, total_lines)?;
@@ -115,10 +124,10 @@ where
 {
     if let Some(start) = get_start_index(bytes_count, total_bytes) {
         file.seek(SeekFrom::Start(start))?;
-        let mut buffer = Vec::new();
-        file.read_to_end(&mut buffer)?;
-        if !buffer.is_empty() {
-            print!("{}", String::from_utf8_lossy(&buffer));
+        let mut buf = Vec::new();
+        file.read_to_end(&mut buf)?;
+        if !buf.is_empty() {
+            print!("{}", String::from_utf8_lossy(&buf));
         }
     }
     Ok(())
@@ -152,5 +161,23 @@ fn get_start_index(value: i64, total: i64) -> Option<u64> {
     } else {
         let start = if value < 0 { total + value } else { value - 1 };
         Some(if start < 0 { 0 } else { start as u64 })
+    }
+}
+
+fn follow_file<T>(mut file: T) -> Result<()>
+where
+    T: Read + Seek + BufRead,
+{
+    let mut buf = Vec::new();
+    file.seek(SeekFrom::End(0))?;
+    loop {
+        file.read_until(b'\n', &mut buf)?;
+        if !buf.is_empty() {
+            print!("{}", String::from_utf8_lossy(&buf));
+            buf.clear();
+        } else {
+            file.seek(SeekFrom::End(0))?;
+            thread::sleep(SLEEP_INTERVAL);
+        }
     }
 }
