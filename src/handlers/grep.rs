@@ -17,26 +17,23 @@ pub fn grep(
     invert: bool,
 ) -> Result<()> {
     let pattern = build_regex_pattern(pattern, ignore_case)?;
-    let entries = find_files(files, recursive);
-    let files_count = entries.len();
+    let files = find_files(files, recursive)?;
+    let files_count = files.len();
 
-    for entry in entries {
-        match entry {
-            Err(e) => display_error("grep", &e),
-            Ok(filename) => match open_file(&filename) {
-                Err(e) => display_file_error("grep", &filename, &e),
-                Ok(file) => match find_lines(file, &pattern, invert) {
-                    Err(e) => display_error("grep", &e),
-                    Ok(matches) => {
-                        if count {
-                            log_data(files_count, &filename, &format!("{}\n", matches.len()));
-                        } else {
-                            matches
-                                .iter()
-                                .for_each(|line| log_data(files_count, &filename, line))
-                        }
+    for filename in files {
+        match open_file(&filename) {
+            Err(e) => display_file_error("grep", &filename, &e),
+            Ok(file) => match find_lines(file, &pattern, invert) {
+                Err(e) => display_error("grep", &e),
+                Ok(matches) => {
+                    if count {
+                        log_data(files_count, &filename, &format!("{}\n", matches.len()));
+                    } else {
+                        matches
+                            .iter()
+                            .for_each(|line| log_data(files_count, &filename, line))
                     }
-                },
+                }
             },
         }
     }
@@ -61,25 +58,23 @@ fn log_data(files_count: usize, file_name: &str, value: &str) {
 }
 
 //------------------
-fn find_files(paths: &[String], recursive: bool) -> Vec<Result<String>> {
-    paths
+fn find_files(paths: &[String], recursive: bool) -> Result<Vec<String>> {
+    let files = paths
         .iter()
-        .fold(Vec::new(), |mut results, path| -> Vec<Result<String>> {
+        .fold(Vec::new(), |mut results, path| -> Vec<String> {
             match path.as_str() {
                 "-" => {
-                    results.push(Ok(path.to_string()));
+                    results.push(path.to_string());
                 }
                 _ => match fs::metadata(path) {
                     Err(e) => {
-                        // results.push(Err(anyhow!("{path}: {e}")));
                         display_error("grep", &anyhow!("{path}: {e}"));
                     }
                     Ok(metadata) => {
                         if metadata.is_file() {
-                            results.push(Ok(path.to_string()));
+                            results.push(path.to_string());
                         } else if metadata.is_dir() {
                             if !recursive {
-                                // results.push(Err(anyhow!("{path} is a directory")));
                                 display_error("grep", &anyhow!("{path} is a directory"));
                             } else {
                                 WalkDir::new(path)
@@ -87,7 +82,7 @@ fn find_files(paths: &[String], recursive: bool) -> Vec<Result<String>> {
                                     .flatten()
                                     .filter(|val| val.file_type().is_file())
                                     .for_each(|entry| {
-                                        results.push(Ok(entry.path().display().to_string()));
+                                        results.push(entry.path().display().to_string());
                                     })
                             }
                         }
@@ -95,7 +90,8 @@ fn find_files(paths: &[String], recursive: bool) -> Vec<Result<String>> {
                 },
             }
             results
-        })
+        });
+    Ok(files)
 }
 
 fn find_lines(mut file: Box<dyn BufRead>, pattern: &Regex, invert: bool) -> Result<Vec<String>> {

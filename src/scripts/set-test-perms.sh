@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# used for testing ls command
 # run from root dir
 set -u
 DIR=${1:-$PWD}

@@ -20,7 +20,6 @@ pub fn comm(
 ) -> Result<()> {
     validate_file_name(file_1, file_2)?;
 
-    //TODO rename
     let mut file_1_lines = prepare_line_iterator(file_1, ignore_case)?;
     let mut file_2_lines = prepare_line_iterator(file_2, ignore_case)?;
 
@@ -108,7 +107,6 @@ fn log_data(
     }
 }
 
-//TODO: refactor return type
 fn prepare_line_iterator(file: &str, ignore_case: bool) -> Result<impl Iterator<Item = String>> {
     let lines = open_file_map_err(file, "comm")? //TODO: extract const
         .lines()
