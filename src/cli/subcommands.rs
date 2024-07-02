@@ -256,14 +256,16 @@ pub enum Subcommands {
         follow: bool,
     },
 
-    #[clap(about = "")]
+    #[clap(about = help_messages::LS)]
     Ls {
         #[arg(default_value = ".")]
         paths: Vec<String>,
 
+        /// use a long listing format
         #[arg(short, long)]
         long: bool,
 
+        /// do not ignore entries starting with .
         #[arg(short('a'), long("all"))]
         show_hidden: bool,
     },

@@ -1,13 +1,13 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use chrono::{DateTime, Local};
 use std::{fs, os::unix::fs::MetadataExt, path::PathBuf};
 use tabular::{Row, Table};
 use users::{get_group_by_gid, get_user_by_uid};
 
+use super::helpers::logging::display_error;
 use crate::utils::owner::Owner;
 
 pub fn ls(paths: &[String], long: bool, show_hidden: bool) -> Result<()> {
-    // modify as in grep
     let paths = find_files(paths, show_hidden)?;
     if long {
         println!("{}", format_output(&paths)?); // all paths concatenated in table
@@ -22,65 +22,29 @@ pub fn ls(paths: &[String], long: bool, show_hidden: bool) -> Result<()> {
 // -------------
 fn find_files(paths: &[String], show_hidden: bool) -> Result<Vec<PathBuf>> {
     let mut results = vec![];
-    for name in paths {
-        match fs::metadata(name) {
-            Err(e) => eprintln!("{name}: {e}"), // similar in grep
-            Ok(meta) => {
-                if meta.is_dir() {
-                    for entry in fs::read_dir(name)? {
-                        let entry = entry?;
-                        let path = entry.path();
+    for path in paths {
+        match fs::metadata(path) {
+            Err(e) => display_error("ls", &anyhow!("{path}: {e}")),
+            Ok(metadata) => {
+                if metadata.is_dir() {
+                    for entry in fs::read_dir(path)? {
+                        let path = entry?.path();
                         let is_hidden = path.file_name().map_or(false, |file_name| {
                             file_name.to_string_lossy().starts_with('.')
                         });
                         if !is_hidden || show_hidden {
-                            results.push(entry.path());
+                            results.push(path);
                         }
                     }
                 } else {
-                    results.push(PathBuf::from(name));
+                    results.push(PathBuf::from(path));
                 }
             }
         }
     }
     Ok(results)
-    /*
-    paths
-        .iter()
-        .fold(Vec::new(), |mut results, path| -> Vec<Result<PathBuf>> {
-            match path.as_str() {
-                "-" => {
-                    results.push(Ok(path.to_string()));
-                }
-                _ => match fs::metadata(path) {
-                    Err(e) => {
-                        results.push(Err(anyhow!("grep: {path}: {e}")));
-                    }
-                    Ok(metadata) => {
-                        if metadata.is_file() {
-                            results.push(Ok(path.to_string()));
-                        } else if metadata.is_dir() {
-                            if 1==0 {
-                                results.push(Err(anyhow!("grep: {path} is a directory")));
-                            } else {
-                                WalkDir::new(path)
-                                    .into_iter()
-                                    .flatten()
-                                    .filter(|val| val.file_type().is_file())
-                                    .for_each(|entry| {
-                                        results.push(Ok(entry.path().display().to_string()));
-                                    })
-                            }
-                        }
-                    }
-                },
-            }
-            results
-        })
-        */
 }
 
-// --------------------------------------------------
 fn format_output(paths: &[PathBuf]) -> Result<String> {
     //         1   2     3     4     5     6     7     8
     let fmt = "{:<}{:<}  {:>}  {:<}  {:<}  {:>}  {:<}  {:<}";
@@ -88,7 +52,6 @@ fn format_output(paths: &[PathBuf]) -> Result<String> {
 
     for path in paths {
         let metadata = path.metadata()?;
-
         let uid = metadata.uid();
         let user = get_user_by_uid(uid)
             .map(|u| u.name().to_string_lossy().into_owned())
@@ -100,13 +63,13 @@ fn format_output(paths: &[PathBuf]) -> Result<String> {
             .unwrap_or_else(|| gid.to_string());
 
         let file_type = if path.is_dir() { "d" } else { "-" };
-        let perms = format_mode(metadata.mode());
+        let permissions = format_mode(metadata.mode());
         let modified: DateTime<Local> = DateTime::from(metadata.modified()?);
 
         table.add_row(
             Row::new()
                 .with_cell(file_type) // 1
-                .with_cell(perms) // 2
+                .with_cell(permissions) // 2
                 .with_cell(metadata.nlink()) // 3
                 .with_cell(user) // 4
                 .with_cell(group) // 5
@@ -118,22 +81,16 @@ fn format_output(paths: &[PathBuf]) -> Result<String> {
     Ok(format!("{table}"))
 }
 
-// --------------------------------------------------
-/// Given a file mode in octal format like 0o751,
-/// return a string like "rwxr-x--x"
 fn format_mode(mode: u32) -> String {
     format!(
         "{}{}{}",
-        mk_triple(mode, Owner::User),
-        mk_triple(mode, Owner::Group),
-        mk_triple(mode, Owner::Other),
+        apply_masks(mode, Owner::User),
+        apply_masks(mode, Owner::Group),
+        apply_masks(mode, Owner::Other),
     )
 }
 
-// --------------------------------------------------
-/// Given an octal number like 0o500 and an [`Owner`],
-/// return a string like "r-x"
-fn mk_triple(mode: u32, owner: Owner) -> String {
+fn apply_masks(mode: u32, owner: Owner) -> String {
     let [read, write, execute] = owner.masks();
     format!(
         "{}{}{}",
