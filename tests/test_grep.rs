@@ -249,8 +249,7 @@ fn insensitive_count_multiple() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn warns_dir_not_recursive() -> Result<()> {
-    let stdout = "./tests/resources/grep/inputs/fox.txt:\
-        The quick brown fox jumps over the lazy dog.";
+    let stdout = "The quick brown fox jumps over the lazy dog.";
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args(["fox", INPUTS_DIR, FOX])

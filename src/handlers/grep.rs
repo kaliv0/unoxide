@@ -71,14 +71,16 @@ fn find_files(paths: &[String], recursive: bool) -> Vec<Result<String>> {
                 }
                 _ => match fs::metadata(path) {
                     Err(e) => {
-                        results.push(Err(anyhow!("grep: {path}: {e}")));
+                        // results.push(Err(anyhow!("{path}: {e}")));
+                        display_error("grep", &anyhow!("{path}: {e}"));
                     }
                     Ok(metadata) => {
                         if metadata.is_file() {
                             results.push(Ok(path.to_string()));
                         } else if metadata.is_dir() {
                             if !recursive {
-                                results.push(Err(anyhow!("grep: {path} is a directory")));
+                                // results.push(Err(anyhow!("{path} is a directory")));
+                                display_error("grep", &anyhow!("{path} is a directory"));
                             } else {
                                 WalkDir::new(path)
                                     .into_iter()

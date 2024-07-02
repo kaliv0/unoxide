@@ -255,4 +255,16 @@ pub enum Subcommands {
         #[arg(short, long)]
         follow: bool,
     },
+
+    #[clap(about = "")]
+    Ls {
+        #[arg(default_value = ".")]
+        paths: Vec<String>,
+
+        #[arg(short, long)]
+        long: bool,
+
+        #[arg(short('a'), long("all"))]
+        show_hidden: bool,
+    },
 }

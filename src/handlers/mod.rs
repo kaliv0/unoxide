@@ -6,6 +6,7 @@ pub mod find;
 pub mod grep;
 pub mod head;
 pub mod helpers;
+pub mod ls;
 pub mod tail;
 pub mod uniq;
 pub mod wc;

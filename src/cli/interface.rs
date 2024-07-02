@@ -3,6 +3,7 @@ use clap::Parser;
 
 use super::subcommands::Subcommands;
 use crate::handlers::comm::comm;
+use crate::handlers::ls::ls;
 use crate::handlers::tail::tail;
 use crate::handlers::{
     cat::cat, cut::cut, echo::echo, find::find, grep::grep, head::head, uniq::uniq, wc::wc,
@@ -113,7 +114,11 @@ impl Cli {
                 verbose,
                 follow,
             } => tail(&files, lines, bytes, quiet, verbose, follow),
-            // _ => Ok(()), // throw error?
+            Subcommands::Ls {
+                paths,
+                long,
+                show_hidden,
+            } => ls(&paths, long, show_hidden), // _ => Ok(()), // throw error?
         }
     }
 }
