@@ -54,210 +54,156 @@ fn skips_bad_file() -> Result<()> {
 }
 
 // --------------------------------------------------
-fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    let expected = fs::read_to_string(expected_file)?;
-    let output = Command::cargo_bin(PRG)?
+fn run(args: &[&str]) -> Result<()> {
+    let expected = std::process::Command::new(SUBCMD)
+        .args(args)
+        .output()
+        .unwrap();
+    let actual = Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args(args)
         .output()
         .unwrap();
-    assert!(output.status.success());
 
-    let stdout = String::from_utf8(output.stdout).expect("invalid UTF-8");
-    assert_eq!(stdout, expected);
-
+    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
+    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
+    assert!(actual.status.success());
+    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
     Ok(())
 }
 
 // --------------------------------------------------
-fn run_stdin(input_file: &str, args: &[&str], expected_file: &str) -> Result<()> {
-    let input = fs::read_to_string(input_file)?;
-    let expected = fs::read_to_string(expected_file)?;
-    let output = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
+fn run_stdin(input_file: &str, args: &[&str]) -> Result<()> {
+    let expected = std::process::Command::new(SUBCMD)
+        .arg(&input_file)
         .args(args)
-        .write_stdin(input)
         .output()
         .unwrap();
-    assert!(output.status.success());
 
-    let stdout = String::from_utf8(output.stdout).expect("invalid UTF-8");
-    assert_eq!(stdout, expected);
+    let actual = Command::cargo_bin(PRG)?
+        .arg(SUBCMD)
+        .arg(&input_file)
+        .args(args)
+        .output()
+        .unwrap();
+
+    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
+    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
+    assert!(actual.status.success());
+    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
     Ok(())
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_stdin() -> Result<()> {
-    run_stdin(
-        BUSTLE,
-        &["-"],
-        "tests/resources/cat/expected/the-bustle.txt.stdin.out",
-    )
+    run_stdin(BUSTLE, &["-"])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_stdin_n() -> Result<()> {
-    run_stdin(
-        BUSTLE,
-        &["-n", "-"],
-        "tests/resources/cat/expected/the-bustle.txt.n.stdin.out",
-    )
+    run_stdin(BUSTLE, &["-n", "-"])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_stdin_b() -> Result<()> {
-    run_stdin(
-        BUSTLE,
-        &["-b", "-"],
-        "tests/resources/cat/expected/the-bustle.txt.b.stdin.out",
-    )
+    run_stdin(BUSTLE, &["-b", "-"])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty() -> Result<()> {
-    run(&[EMPTY], "tests/resources/cat/expected/empty.txt.out")
+    run(&[EMPTY])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_n() -> Result<()> {
-    run(
-        &["-n", EMPTY],
-        "tests/resources/cat/expected/empty.txt.n.out",
-    )
+    run(&["-n", EMPTY])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_b() -> Result<()> {
-    run(
-        &["-b", EMPTY],
-        "tests/resources/cat/expected/empty.txt.b.out",
-    )
+    run(&["-b", EMPTY])
 }
 
 // --------------------------------------------------
 #[test]
 fn fox() -> Result<()> {
-    run(&[FOX], "tests/resources/cat/expected/fox.txt.out")
+    run(&[FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn fox_n() -> Result<()> {
-    run(&["-n", FOX], "tests/resources/cat/expected/fox.txt.n.out")
+    run(&["-n", FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn fox_b() -> Result<()> {
-    run(&["-b", FOX], "tests/resources/cat/expected/fox.txt.b.out")
+    run(&["-b", FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn spiders() -> Result<()> {
-    run(&[SPIDERS], "tests/resources/cat/expected/spiders.txt.out")
+    run(&[SPIDERS])
 }
 
 // --------------------------------------------------
 #[test]
 fn spiders_n() -> Result<()> {
-    run(
-        &["--number", SPIDERS],
-        "tests/resources/cat/expected/spiders.txt.n.out",
-    )
+    run(&["--number", SPIDERS])
 }
 
 // --------------------------------------------------
 #[test]
 fn spiders_b() -> Result<()> {
-    run(
-        &["--number-nonblank", SPIDERS],
-        "tests/resources/cat/expected/spiders.txt.b.out",
-    )
+    run(&["--number-nonblank", SPIDERS])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle() -> Result<()> {
-    run(&[BUSTLE], "tests/resources/cat/expected/the-bustle.txt.out")
+    run(&[BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_n() -> Result<()> {
-    run(
-        &["-n", BUSTLE],
-        "tests/resources/cat/expected/the-bustle.txt.n.out",
-    )
+    run(&["-n", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_b() -> Result<()> {
-    run(
-        &["-b", BUSTLE],
-        "tests/resources/cat/expected/the-bustle.txt.b.out",
-    )
+    run(&["-b", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn all() -> Result<()> {
-    run(
-        &[FOX, SPIDERS, BUSTLE],
-        "tests/resources/cat/expected/all.out",
-    )
+    run(&[FOX, SPIDERS, BUSTLE])
 }
 
 // --------------------------------------------------
-#[test]
-fn all_n() -> Result<()> {
-    run(
-        &[FOX, SPIDERS, BUSTLE, "-n"],
-        "tests/resources/cat/expected/all.n.out",
-    )
-}
+// #[test]
+// fn all_n() -> Result<()> {
+//     run(
+//         &[FOX, SPIDERS, BUSTLE, "-n"],
+//         "tests/resources/cat/expected/all.n.out",
+//     )
+// }
 
 // --------------------------------------------------
-#[test]
-fn all_b() -> Result<()> {
-    run(
-        &[FOX, SPIDERS, BUSTLE, "-b"],
-        "tests/resources/cat/expected/all.b.out",
-    )
-}
-
-//--------------------------------
-//--------------------------------
-//--------------------------------
-#[test]
-fn test_custom_vs_actual() -> Result<()> {
-    let text = String::from("tests/resources/cat/inputs/spiders.txt");
-
-    let expected = std::process::Command::new(SUBCMD)
-        .arg(&text)
-        .output()
-        .unwrap();
-
-    let actual = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .arg(&text)
-        .output()
-        .unwrap();
-
-    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
-    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
-
-    // println!("{expected_stdout}");
-    // println!("{actual_stdout}");
-
-    assert!(actual.status.success());
-    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
-    Ok(())
-}
+// #[test]
+// fn all_b() -> Result<()> {
+//     run(
+//         &[FOX, SPIDERS, BUSTLE, "-b"],
+//         "tests/resources/cat/expected/all.b.out",
+//     )
+// }

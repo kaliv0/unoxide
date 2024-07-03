@@ -3,8 +3,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use rand::{distributions::Alphanumeric, Rng};
-use std::{fs, path::Path};
-use sys_info::os_type;
+use std::fs;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "grep";
@@ -67,13 +66,6 @@ fn warns_bad_file() -> Result<()> {
 
 // --------------------------------------------------
 fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    let windows_file = format!("{expected_file}.windows");
-    let expected_file = if os_type().unwrap() == "Windows" && Path::new(&windows_file).is_file() {
-        &windows_file
-    } else {
-        expected_file
-    };
-
     let expected = fs::read_to_string(expected_file)?;
     let output = Command::cargo_bin(PRG)?
         .arg(SUBCMD)

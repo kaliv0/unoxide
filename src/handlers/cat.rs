@@ -42,7 +42,7 @@ fn handle_file(
 
         if number_lines || (number_nonblank_lines && !line.is_empty()) {
             line_num += 1;
-            println!("{:6}\t{}", line_num, line); // move vars inside braces (for constistency with other files)?
+            println!("{:6}\t{}", line_num, line);
         } else {
             println!("{}", line);
         }

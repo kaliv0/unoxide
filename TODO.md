@@ -11,4 +11,9 @@
 - remove lib.rs?
 <br><br>
 ------------------
-cargo clippy -- --allow clippy::too_many_arguments
+fix implemntation:
+- cat -n/-b with multiple files -> don't start each from zero
+
+
+
+

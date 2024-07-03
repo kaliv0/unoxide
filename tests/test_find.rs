@@ -63,14 +63,6 @@ fn dies_bad_type() -> Result<()> {
 }
 
 // --------------------------------------------------
-#[cfg(windows)]
-fn format_file_name(expected_file: &str) -> Cow<str> {
-    // Equivalent to: Cow::Owned(format!("{}.windows", expected_file))
-    format!("{}.windows", expected_file).into()
-}
-
-// --------------------------------------------------
-#[cfg(not(windows))]
 fn format_file_name(expected_file: &str) -> Cow<str> {
     // Equivalent to: Cow::Borrowed(expected_file)
     expected_file.into()
@@ -346,7 +338,6 @@ fn path_g() -> Result<()> {
 
 // --------------------------------------------------
 #[test]
-#[cfg(not(windows))]
 fn unreadable_dir() -> Result<()> {
     let dirname = "./tests/resources/find/inputs/cant-touch-this";
     if !Path::new(dirname).exists() {
