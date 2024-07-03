@@ -6,7 +6,7 @@ use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use std::fs;
 
-use utils::helpers::{dies_recommends_usage, generate_bad_file};
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "grep";
@@ -19,7 +19,7 @@ const INPUTS_DIR: &str = "./tests/resources/grep/inputs";
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    dies_recommends_usage(PRG, SUBCMD)
+    helpers::dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------
@@ -37,14 +37,10 @@ fn dies_bad_pattern() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn warns_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(["foo", &bad])
-        .assert()
-        .stderr(predicate::str::is_match(expected)?);
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let args = ["foo", &bad];
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &args, &expected)
 }
 
 // --------------------------------------------------

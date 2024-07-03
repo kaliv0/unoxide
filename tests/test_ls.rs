@@ -5,7 +5,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "ls";
@@ -17,15 +17,9 @@ const FOX: &str = "./tests/resources/ls/inputs/fox.txt";
 // --------------------------------------------------
 #[test]
 fn bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{}: No such file or directory (os error 2)", &bad);
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .arg(&bad)
-        .assert()
-        .success()
-        .stderr(predicate::str::contains(expected));
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &[&bad], &expected)
 }
 
 // --------------------------------------------------

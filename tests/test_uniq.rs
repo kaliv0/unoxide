@@ -2,12 +2,11 @@ pub mod utils;
 
 use anyhow::Result;
 use assert_cmd::Command;
-use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use std::fs;
 use tempfile::NamedTempFile;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers;
 
 struct Test {
     input: &'static str,
@@ -87,14 +86,9 @@ const T6: Test = Test {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("uniq: {bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .arg(&bad)
-        .assert()
-        .stderr(predicate::str::is_match(expected)?);
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &[&bad], &expected)
 }
 
 // --------------------------------------------------

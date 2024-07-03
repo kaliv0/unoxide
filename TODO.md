@@ -14,4 +14,6 @@ fix implemntation:
 - generate_bad_file common to cat, comm, find, grep, ls, uniq
 - after removing expected dirs -> remove inputs nested dirs, move files one level up
 
-- extract - dies_no_args, 
+- extract - 
+
+- NB -> comm orders output differently than linux version

@@ -6,7 +6,7 @@ use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use std::fs;
 
-use utils::helpers::{dies_recommends_usage, generate_bad_file};
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "comm";
@@ -18,14 +18,14 @@ const BLANK: &str = "./tests/resources/comm/inputs/blank.txt";
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    dies_recommends_usage(PRG, SUBCMD)
+    helpers::dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------
 #[test]
 fn dies_bad_file1() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
+    let bad = helpers::generate_bad_file();
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args([&bad, FILE1])
@@ -38,8 +38,8 @@ fn dies_bad_file1() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn dies_bad_file2() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
+    let bad = helpers::generate_bad_file();
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args([FILE1, &bad])

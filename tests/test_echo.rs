@@ -5,7 +5,7 @@ use assert_cmd::Command;
 use pretty_assertions::assert_eq;
 use std::fs;
 
-use utils::helpers::dies_recommends_usage;
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "echo";
@@ -13,7 +13,7 @@ const SUBCMD: &str = "echo";
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    dies_recommends_usage(PRG, SUBCMD)
+    helpers::dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------

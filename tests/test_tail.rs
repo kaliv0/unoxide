@@ -8,7 +8,7 @@ use rand::{distributions::Alphanumeric, Rng};
 use std::fs::File;
 use std::io::Read;
 
-use utils::helpers::{dies_recommends_usage, generate_bad_file};
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "tail";
@@ -30,7 +30,7 @@ fn random_string() -> String {
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    dies_recommends_usage(PRG, SUBCMD)
+    helpers::dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------
@@ -82,15 +82,10 @@ fn dies_bytes_and_lines() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args([ONE, &bad, TWO])
-        .assert()
-        .stderr(predicate::str::is_match(expected)?);
-
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let args = [ONE, &bad, TWO];
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &args, &expected)
 }
 
 // --------------------------------------------------

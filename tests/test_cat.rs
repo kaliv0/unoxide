@@ -5,7 +5,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "cat";
@@ -29,15 +29,9 @@ fn usage() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .arg(&bad)
-        .assert()
-        .success()
-        .stderr(predicate::str::is_match(expected)?);
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &[&bad], &expected)
 }
 
 // --------------------------------------------------

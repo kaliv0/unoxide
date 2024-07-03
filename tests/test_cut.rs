@@ -7,7 +7,7 @@ use pretty_assertions::assert_eq;
 use rand::{distributions::Alphanumeric, Rng};
 use std::fs;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "cut";
@@ -27,15 +27,10 @@ fn random_string() -> String {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(["-f", "1", CSV, &bad, TSV])
-        .assert()
-        .success()
-        .stderr(predicate::str::is_match(expected)?);
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let args = ["-f", "1", CSV, &bad, TSV];
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &args, &expected)
 }
 
 // --------------------------------------------------

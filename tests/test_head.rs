@@ -8,7 +8,7 @@ use rand::{distributions::Alphanumeric, Rng};
 use std::fs::{self, File};
 use std::io::prelude::*;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "head";
@@ -83,15 +83,10 @@ fn dies_bytes_and_lines() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = generate_bad_file();
-    let expected = format!("{bad}: .* [(]os error 2[)]");
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args([EMPTY, &bad, ONE])
-        .assert()
-        .stderr(predicate::str::is_match(expected)?);
-
-    Ok(())
+    let bad = helpers::generate_bad_file();
+    let args = [EMPTY, &bad, ONE];
+    let expected = format!("{SUBCMD}: {bad}: .* [(]os error 2[)]");
+    helpers::skips_bad_entry(PRG, SUBCMD, &args, &expected)
 }
 
 // --------------------------------------------------
