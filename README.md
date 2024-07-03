@@ -13,5 +13,3 @@ supports:
 - grep
 - uniq
 - comm
-
-(Inspired by "Command-line Rust" by Ken Youens-Clark)
