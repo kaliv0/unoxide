@@ -1,10 +1,14 @@
+pub mod utils;
+
 use anyhow::Result;
 use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use rand::{distributions::Alphanumeric, Rng};
-use std::fs::{self, File};
+use std::fs::File;
 use std::io::Read;
+
+use utils::helpers::{dies_recommends_usage, generate_bad_file};
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "tail";
@@ -24,25 +28,15 @@ fn random_string() -> String {
 }
 
 // --------------------------------------------------
-fn gen_bad_file() -> String {
-    loop {
-        let filename = random_string();
-        if fs::metadata(&filename).is_err() {
-            return filename;
-        }
-    }
-}
-
-// --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .assert()
-        .failure()
-        .stderr(predicate::str::contains("Usage"));
-
-    Ok(())
+    // Command::cargo_bin(PRG)?
+    //     .arg(SUBCMD)
+    //     .assert()
+    //     .failure()
+    //     .stderr(predicate::str::contains("Usage"));
+    // Ok(())
+    dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------
@@ -94,7 +88,7 @@ fn dies_bytes_and_lines() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = gen_bad_file();
+    let bad = generate_bad_file();
     let expected = format!("{bad}: .* [(]os error 2[)]");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)

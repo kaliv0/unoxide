@@ -1,9 +1,11 @@
+pub mod utils;
+
 use anyhow::Result;
 use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
-use rand::{distributions::Alphanumeric, Rng};
-use std::fs;
+
+use utils::helpers::generate_bad_file;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "ls";
@@ -13,24 +15,9 @@ const BUSTLE: &str = "./tests/resources/ls/inputs/bustle.txt";
 const FOX: &str = "./tests/resources/ls/inputs/fox.txt";
 
 // --------------------------------------------------
-fn gen_bad_file() -> String {
-    loop {
-        let filename: String = rand::thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(7)
-            .map(char::from)
-            .collect();
-
-        if fs::metadata(&filename).is_err() {
-            return filename;
-        }
-    }
-}
-
-// --------------------------------------------------
 #[test]
 fn bad_file() -> Result<()> {
-    let bad = gen_bad_file();
+    let bad = generate_bad_file();
     let expected = format!("{}: No such file or directory (os error 2)", &bad);
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)

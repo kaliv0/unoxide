@@ -2,18 +2,16 @@
 - write custom_vs_actual tests and remove the other ones
 - add tests for errors as well
 <br>
-- should we pass &str instead of String unless necessary?
-- research about passing and returning  Box<dyn Write> between functions
 - cut -> research how to handle extract.copy() etc
 - extract error messages to const file
 - rename project and main command
-- after refactoring tests -> remove sys-info (used for 'Windows' tests)
-- remove lib.rs?
 <br><br>
 ------------------
 fix implemntation:
 - cat -n/-b with multiple files -> don't start each from zero
 
+- test_cat::skips_bad_file similar to test_find::skips_bad_dir
+- generate_bad_file common to cat, comm, find, grep, ls, uniq
+- after removing expected dirs -> remove inputs nested dirs, move files one level up
 
-
-
+- extract - dies_no_args, 

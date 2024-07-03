@@ -1,10 +1,13 @@
+pub mod utils;
+
 use anyhow::Result;
 use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
-use rand::{distributions::Alphanumeric, Rng};
 use std::fs;
 use tempfile::NamedTempFile;
+
+use utils::helpers::generate_bad_file;
 
 struct Test {
     input: &'static str,
@@ -82,24 +85,9 @@ const T6: Test = Test {
 };
 
 // --------------------------------------------------
-fn gen_bad_file() -> String {
-    loop {
-        let filename: String = rand::thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(7)
-            .map(char::from)
-            .collect();
-
-        if fs::metadata(&filename).is_err() {
-            return filename;
-        }
-    }
-}
-
-// --------------------------------------------------
 #[test]
 fn skips_bad_file() -> Result<()> {
-    let bad = gen_bad_file();
+    let bad = generate_bad_file();
     let expected = format!("uniq: {bad}: .* [(]os error 2[)]");
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)

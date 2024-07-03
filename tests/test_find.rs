@@ -1,32 +1,20 @@
+pub mod utils;
+
 use anyhow::Result;
 use assert_cmd::Command;
 use predicates::prelude::*;
 use pretty_assertions::assert_eq;
-use rand::{distributions::Alphanumeric, Rng};
 use std::{borrow::Cow, fs, path::Path};
+
+use utils::helpers::generate_bad_file;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "find";
 
 // --------------------------------------------------
-fn gen_bad_file() -> String {
-    loop {
-        let filename: String = rand::thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(7)
-            .map(char::from)
-            .collect();
-
-        if fs::metadata(&filename).is_err() {
-            return filename;
-        }
-    }
-}
-
-// --------------------------------------------------
 #[test]
 fn skips_bad_dir() -> Result<()> {
-    let bad = gen_bad_file();
+    let bad = generate_bad_file();
     let expected = format!("{}: .* [(]os error [23][)]", &bad);
     Command::cargo_bin(PRG)?
         .arg(SUBCMD)
