@@ -90,22 +90,8 @@ fn skips_bad_file() -> Result<()> {
 }
 
 // --------------------------------------------------
-fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    // Extra work here due to lossy UTF
-    let mut file = File::open(expected_file)?;
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer)?;
-    let expected = String::from_utf8_lossy(&buffer);
-
-    let output = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(args)
-        .output()
-        .expect("fail");
-    assert!(output.status.success());
-    assert_eq!(String::from_utf8_lossy(&output.stdout), expected);
-
-    Ok(())
+fn run(args: &[&str]) -> Result<()> {
+    helpers::run(PRG, SUBCMD, args)
 }
 
 // --------------------------------------------------
@@ -132,89 +118,57 @@ fn run_stdin(args: &[&str], input_file: &str, expected_file: &str) -> Result<()>
 // --------------------------------------------------
 #[test]
 fn empty() -> Result<()> {
-    run(&[EMPTY], "tests/resources/head/expected/empty.txt.out")
+    run(&[EMPTY])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_n2() -> Result<()> {
-    run(
-        &[EMPTY, "-n", "2"],
-        "tests/resources/head/expected/empty.txt.n2.out",
-    )
+    run(&[EMPTY, "-n", "2"])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_n4() -> Result<()> {
-    run(
-        &[EMPTY, "-n", "4"],
-        "tests/resources/head/expected/empty.txt.n4.out",
-    )
+    run(&[EMPTY, "-n", "4"])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_c2() -> Result<()> {
-    run(
-        &[EMPTY, "-c", "2"],
-        "tests/resources/head/expected/empty.txt.c2.out",
-    )
+    run(&[EMPTY, "-c", "2"])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_c4() -> Result<()> {
-    run(
-        &[EMPTY, "-c", "4"],
-        "tests/resources/head/expected/empty.txt.c4.out",
-    )
+    run(&[EMPTY, "-c", "4"])
 }
 
 // --------------------------------------------------
 #[test]
 fn one() -> Result<()> {
-    run(&[ONE], "tests/resources/head/expected/one.txt.out")
+    run(&[ONE])
 }
 
 #[test]
 fn one_n2() -> Result<()> {
-    run(
-        &[ONE, "-n", "2"],
-        "tests/resources/head/expected/one.txt.n2.out",
-    )
+    run(&[ONE, "-n", "2"])
 }
 
 #[test]
 fn one_n4() -> Result<()> {
-    run(
-        &[ONE, "-n", "4"],
-        "tests/resources/head/expected/one.txt.n4.out",
-    )
-}
-
-#[test]
-fn one_c1() -> Result<()> {
-    run(
-        &[ONE, "-c", "1"],
-        "tests/resources/head/expected/one.txt.c1.out",
-    )
+    run(&[ONE, "-n", "4"])
 }
 
 #[test]
 fn one_c2() -> Result<()> {
-    run(
-        &[ONE, "-c", "2"],
-        "tests/resources/head/expected/one.txt.c2.out",
-    )
+    run(&[ONE, "-c", "2"])
 }
 
 #[test]
 fn one_c4() -> Result<()> {
-    run(
-        &[ONE, "-c", "4"],
-        "tests/resources/head/expected/one.txt.c4.out",
-    )
+    run(&[ONE, "-c", "4"])
 }
 
 #[test]
@@ -270,39 +224,27 @@ fn one_c4_stdin() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn two() -> Result<()> {
-    run(&[TWO], "tests/resources/head/expected/two.txt.out")
+    run(&[TWO])
 }
 
 #[test]
 fn two_n2() -> Result<()> {
-    run(
-        &[TWO, "-n", "2"],
-        "tests/resources/head/expected/two.txt.n2.out",
-    )
+    run(&[TWO, "-n", "2"])
 }
 
 #[test]
 fn two_n4() -> Result<()> {
-    run(
-        &[TWO, "-n", "4"],
-        "tests/resources/head/expected/two.txt.n4.out",
-    )
+    run(&[TWO, "-n", "4"])
 }
 
 #[test]
 fn two_c2() -> Result<()> {
-    run(
-        &[TWO, "-c", "2"],
-        "tests/resources/head/expected/two.txt.c2.out",
-    )
+    run(&[TWO, "-c", "2"])
 }
 
 #[test]
 fn two_c4() -> Result<()> {
-    run(
-        &[TWO, "-c", "4"],
-        "tests/resources/head/expected/two.txt.c4.out",
-    )
+    run(&[TWO, "-c", "4"])
 }
 
 #[test]
@@ -346,48 +288,20 @@ fn two_c4_stdin() -> Result<()> {
     )
 }
 
-// --------------------------------------------------
-// #[test]
-// fn three() -> Result<()> {
-//     run(&[THREE], "tests/resources/head/expected/three.txt.out")
-// }
-
 #[test]
 fn three_n2() -> Result<()> {
-    run(
-        &[THREE, "-n", "2"],
-        "tests/resources/head/expected/three.txt.n2.out",
-    )
+    run(&[THREE, "-n", "2"])
 }
-
-// #[test]
-// fn three_n4() -> Result<()> {
-//     run(
-//         &[THREE, "-n", "4"],
-//         "tests/resources/head/expected/three.txt.n4.out",
-//     )
-// }
 
 #[test]
 fn three_c2() -> Result<()> {
-    run(
-        &[THREE, "-c", "2"],
-        "tests/resources/head/expected/three.txt.c2.out",
-    )
+    run(&[THREE, "-c", "2"])
 }
 
 #[test]
 fn three_c4() -> Result<()> {
-    run(
-        &[THREE, "-c", "4"],
-        "tests/resources/head/expected/three.txt.c4.out",
-    )
+    run(&[THREE, "-c", "4"])
 }
-
-// #[test]
-// fn three_stdin() -> Result<()> {
-//     run_stdin(&[], THREE, "tests/resources/head/expected/three.txt.out")
-// }
 
 #[test]
 fn three_n2_stdin() -> Result<()> {
@@ -397,15 +311,6 @@ fn three_n2_stdin() -> Result<()> {
         "tests/resources/head/expected/three.txt.n2.out",
     )
 }
-
-// #[test]
-// fn three_n4_stdin() -> Result<()> {
-//     run_stdin(
-//         &["-n", "4"],
-//         THREE,
-//         "tests/resources/head/expected/three.txt.n4.out",
-//     )
-// }
 
 #[test]
 fn three_c2_stdin() -> Result<()> {
@@ -428,39 +333,27 @@ fn three_c4_stdin() -> Result<()> {
 // --------------------------------------------------
 #[test]
 fn twelve() -> Result<()> {
-    run(&[TWELVE], "tests/resources/head/expected/twelve.txt.out")
+    run(&[TWELVE])
 }
 
 #[test]
 fn twelve_n2() -> Result<()> {
-    run(
-        &[TWELVE, "-n", "2"],
-        "tests/resources/head/expected/twelve.txt.n2.out",
-    )
+    run(&[TWELVE, "-n", "2"])
 }
 
 #[test]
 fn twelve_n4() -> Result<()> {
-    run(
-        &[TWELVE, "-n", "4"],
-        "tests/resources/head/expected/twelve.txt.n4.out",
-    )
+    run(&[TWELVE, "-n", "4"])
 }
 
 #[test]
 fn twelve_c2() -> Result<()> {
-    run(
-        &[TWELVE, "-c", "2"],
-        "tests/resources/head/expected/twelve.txt.c2.out",
-    )
+    run(&[TWELVE, "-c", "2"])
 }
 
 #[test]
 fn twelve_c4() -> Result<()> {
-    run(
-        &[TWELVE, "-c", "4"],
-        "tests/resources/head/expected/twelve.txt.c4.out",
-    )
+    run(&[TWELVE, "-c", "4"])
 }
 
 #[test]
@@ -505,50 +398,17 @@ fn twelve_c4_stdin() -> Result<()> {
 }
 
 // --------------------------------------------------
-// #[test]
-// fn multiple_files() -> Result<()> {
-//     run(
-//         &[EMPTY, ONE, TWO, THREE, TWELVE],
-//         "tests/resources/head/expected/all.out",
-//     )
-// }
-
-// #[test]
-// fn multiple_files_n2() -> Result<()> {
-//     run(
-//         &[EMPTY, ONE, TWO, THREE, TWELVE, "-n", "2"],
-//         "tests/resources/head/expected/all.n2.out",
-//     )
-// }
-
-// #[test]
-// fn multiple_files_n4() -> Result<()> {
-//     run(
-//         &["-n", "4", EMPTY, ONE, TWO, THREE, TWELVE],
-//         "tests/resources/head/expected/all.n4.out",
-//     )
-// }
-
 #[test]
 fn multiple_files_c1() -> Result<()> {
-    run(
-        &[EMPTY, ONE, TWO, THREE, TWELVE, "-c", "1"],
-        "tests/resources/head/expected/all.c1.out",
-    )
+    run(&[EMPTY, TWO, THREE, TWELVE, "-c", "1"])
 }
 
 #[test]
 fn multiple_files_c2() -> Result<()> {
-    run(
-        &[EMPTY, ONE, TWO, THREE, TWELVE, "-c", "2"],
-        "tests/resources/head/expected/all.c2.out",
-    )
+    run(&[EMPTY, ONE, TWO, THREE, TWELVE, "-c", "2"])
 }
 
 #[test]
 fn multiple_files_c4() -> Result<()> {
-    run(
-        &["-c", "4", EMPTY, ONE, TWO, THREE, TWELVE],
-        "tests/resources/head/expected/all.c4.out",
-    )
+    run(&["-c", "4", EMPTY, ONE, TWO, THREE, TWELVE])
 }

@@ -92,19 +92,8 @@ fn skips_bad_file() -> Result<()> {
 }
 
 // --------------------------------------------------
-// HELPER FUNCTIONS
 fn run(test: &Test) -> Result<()> {
-    let expected = fs::read_to_string(test.out)?;
-    let output = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .arg(test.input)
-        .output()
-        .expect("fail");
-    assert!(output.status.success());
-
-    let stdout = String::from_utf8(output.stdout).expect("invalid UTF-8");
-    assert_eq!(stdout, expected);
-    Ok(())
+    helpers::run(PRG, SUBCMD, &[test.input])
 }
 
 // --------------------------------------------------

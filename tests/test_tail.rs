@@ -95,7 +95,6 @@ fn run(args: &[&str], expected_file: &str) -> Result<()> {
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer)?;
     let expected = String::from_utf8_lossy(&buffer);
-
     let output = Command::cargo_bin(PRG)?
         .arg(SUBCMD)
         .args(args)

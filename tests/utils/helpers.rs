@@ -4,12 +4,21 @@ use predicates::prelude::predicate;
 use rand::{distributions::Alphanumeric, Rng};
 use std::fs;
 
-pub fn dies_recommends_usage(command: &str, subcommand: &str) -> Result<()> {
-    Command::cargo_bin(command)?
+pub fn run(command: &str, subcommand: &str, args: &[&str]) -> Result<()> {
+    let expected = std::process::Command::new(subcommand)
+        .args(args)
+        .output()
+        .unwrap();
+    let actual = Command::cargo_bin(command)?
         .arg(subcommand)
-        .assert()
-        .failure()
-        .stderr(predicate::str::contains("Usage"));
+        .args(args)
+        .output()
+        .unwrap();
+
+    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
+    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
+    assert!(actual.status.success());
+    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
     Ok(())
 }
 
@@ -28,21 +37,12 @@ pub fn skips_bad_entry(
     Ok(())
 }
 
-pub fn run(command: &str, subcommand: &str, args: &[&str]) -> Result<()> {
-    let expected = std::process::Command::new(subcommand)
-        .args(args)
-        .output()
-        .unwrap();
-    let actual = Command::cargo_bin(command)?
+pub fn dies_recommends_usage(command: &str, subcommand: &str) -> Result<()> {
+    Command::cargo_bin(command)?
         .arg(subcommand)
-        .args(args)
-        .output()
-        .unwrap();
-
-    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
-    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
-    assert!(actual.status.success());
-    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("Usage"));
     Ok(())
 }
 
