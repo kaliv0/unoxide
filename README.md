@@ -1,7 +1,9 @@
 # Commonly used Unix commands implemented in Rust
-[![tests](https://github.com/kaliv0/unoxide/actions/workflows/rust.yml/badge.svg)](https://github.com/kaliv0/unoxide/actions/workflows/rust.yml)
 
-supports:
+[![tests](https://github.com/kaliv0/unoxide/actions/workflows/test.yml/badge.svg)](https://github.com/kaliv0/unoxide/actions/workflows/test.yml)
+
+Currently supports:
+
 - echo
 - cat
 - head
@@ -13,5 +15,3 @@ supports:
 - grep
 - uniq
 - comm
-
-(Inspired by "Command-line Rust" by Ken Youens-Clark)

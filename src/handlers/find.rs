@@ -35,7 +35,6 @@ pub fn find(
             .into_iter()
             .filter_map(|e| match e {
                 Err(e) => {
-                    // display_error("find", path, &anyhow::Error::from(e));
                     display_file_error("find", path, &From::from(e));
                     None
                 }

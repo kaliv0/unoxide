@@ -107,7 +107,7 @@ fn log_data(
 }
 
 fn prepare_line_iterator(file: &str, ignore_case: bool) -> Result<impl Iterator<Item = String>> {
-    let lines = open_file_map_err(file, "comm")? //TODO: extract const
+    let lines = open_file_map_err(file, "comm")?
         .lines()
         .map_while(Result::ok)
         .map(move |line: String| {
