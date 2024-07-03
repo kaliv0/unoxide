@@ -28,6 +28,24 @@ pub fn skips_bad_entry(
     Ok(())
 }
 
+pub fn run(command: &str, subcommand: &str, args: &[&str]) -> Result<()> {
+    let expected = std::process::Command::new(subcommand)
+        .args(args)
+        .output()
+        .unwrap();
+    let actual = Command::cargo_bin(command)?
+        .arg(subcommand)
+        .args(args)
+        .output()
+        .unwrap();
+
+    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
+    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
+    assert!(actual.status.success());
+    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
+    Ok(())
+}
+
 pub fn generate_bad_file() -> String {
     loop {
         let filename: String = rand::thread_rng()

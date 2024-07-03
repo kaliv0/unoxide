@@ -36,22 +36,7 @@ fn skips_bad_file() -> Result<()> {
 
 // --------------------------------------------------
 fn run(args: &[&str]) -> Result<()> {
-    let expected = std::process::Command::new(SUBCMD)
-        .args(args)
-        .output()
-        .unwrap();
-
-    let actual = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(args)
-        .output()
-        .unwrap();
-
-    let expected_stdout = String::from_utf8(expected.stdout).expect("invalid UTF-8");
-    let actual_stdout = String::from_utf8(actual.stdout).expect("invalid UTF-8");
-    assert!(actual.status.success());
-    assert_eq!(expected_stdout.trim_end(), actual_stdout.trim_end());
-    Ok(())
+    helpers::run(PRG, SUBCMD, args)
 }
 
 // --------------------------------------------------

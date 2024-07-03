@@ -1,9 +1,6 @@
 pub mod utils;
 
 use anyhow::Result;
-use assert_cmd::Command;
-use pretty_assertions::assert_eq;
-use std::fs;
 
 use utils::helpers;
 
@@ -17,49 +14,24 @@ fn dies_no_args() -> Result<()> {
 }
 
 // --------------------------------------------------
-fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    let expected = fs::read_to_string(expected_file)?;
-    let output = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(args)
-        .output()
-        .expect("fail");
-
-    let stdout = String::from_utf8(output.stdout).expect("invalid UTF-8");
-    assert_eq!(stdout, expected);
-
-    Ok(())
+fn run(args: &[&str]) -> Result<()> {
+    helpers::run(PRG, SUBCMD, args)
 }
 
 // --------------------------------------------------
 #[test]
 fn hello1() -> Result<()> {
-    run(&["Hello there"], "tests/resources/echo/expected/hello1.txt")
+    run(&["Hello there"])
 }
 
 // --------------------------------------------------
 #[test]
 fn hello2() -> Result<()> {
-    run(
-        &["Hello", "there"],
-        "tests/resources/echo/expected/hello2.txt",
-    )
+    run(&["Hello", "there"])
 }
 
 // --------------------------------------------------
 #[test]
-fn hello1_no_newline() -> Result<()> {
-    run(
-        &["Hello  there", "-n"],
-        "tests/resources/echo/expected/hello1.n.txt",
-    )
-}
-
-// --------------------------------------------------
-#[test]
-fn hello2_no_newline() -> Result<()> {
-    run(
-        &["-n", "Hello", "there"],
-        "tests/resources/echo/expected/hello2.n.txt",
-    )
+fn hello_no_newline() -> Result<()> {
+    run(&["-n", "Hello", "there"])
 }

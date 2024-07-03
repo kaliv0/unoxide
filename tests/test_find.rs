@@ -46,7 +46,6 @@ fn dies_bad_type() -> Result<()> {
 
 // --------------------------------------------------
 fn format_file_name(expected_file: &str) -> Cow<str> {
-    // Equivalent to: Cow::Borrowed(expected_file)
     expected_file.into()
 }
 

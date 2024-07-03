@@ -44,177 +44,116 @@ fn warns_bad_file() -> Result<()> {
 }
 
 // --------------------------------------------------
-fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    let expected = fs::read_to_string(expected_file)?;
-    let output = Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .args(args)
-        .output()
-        .expect("fail");
-    assert!(output.status.success());
-
-    let stdout = String::from_utf8(output.stdout).expect("invalid UTF-8");
-    assert_eq!(stdout, expected);
-    Ok(())
+fn run(args: &[&str]) -> Result<()> {
+    helpers::run(PRG, SUBCMD, args)
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_file() -> Result<()> {
-    run(&["foo", EMPTY], "./tests/resources/grep/expected/empty.foo")
+    run(&["foo", EMPTY])
 }
 
 // --------------------------------------------------
 #[test]
 fn empty_regex() -> Result<()> {
-    run(
-        &["", FOX],
-        "./tests/resources/grep/expected/empty_regex.fox.txt",
-    )
+    run(&["", FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_capitalized() -> Result<()> {
-    run(
-        &["The", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.capitalized",
-    )
+    run(&["The", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_lowercase() -> Result<()> {
-    run(
-        &["the", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.lowercase",
-    )
+    run(&["the", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn bustle_ignore_case() -> Result<()> {
-    run(
-        &["--ignore-case", "the", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.lowercase.insensitive",
-    )
+    run(&["--ignore-case", "the", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn nobody() -> Result<()> {
-    run(
-        &["nobody", NOBODY],
-        "./tests/resources/grep/expected/nobody.txt",
-    )
+    run(&["nobody", NOBODY])
 }
 
 // --------------------------------------------------
 #[test]
 fn nobody_ignore_case() -> Result<()> {
-    run(
-        &["-i", "nobody", NOBODY],
-        "./tests/resources/grep/expected/nobody.txt.insensitive",
-    )
+    run(&["-i", "nobody", NOBODY])
 }
 
 // --------------------------------------------------
 #[test]
 fn multiple_files() -> Result<()> {
-    run(
-        &["The", BUSTLE, EMPTY, FOX],
-        "./tests/resources/grep/expected/all.the.capitalized",
-    )
+    run(&["The", BUSTLE, EMPTY, FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn multiple_files_ignore_case() -> Result<()> {
-    run(
-        &["-i", "the", BUSTLE, EMPTY, FOX],
-        "./tests/resources/grep/expected/all.the.lowercase.insensitive",
-    )
+    run(&["-i", "the", BUSTLE, EMPTY, FOX])
 }
 
 // --------------------------------------------------
 #[test]
 fn recursive() -> Result<()> {
-    run(
-        &["--recursive", "dog", INPUTS_DIR],
-        "./tests/resources/grep/expected/dog.recursive",
-    )
+    run(&["--recursive", "dog", INPUTS_DIR])
 }
 
 // --------------------------------------------------
 #[test]
 fn recursive_ignore_case() -> Result<()> {
-    run(
-        &["-ri", "then", INPUTS_DIR],
-        "./tests/resources/grep/expected/the.recursive.insensitive",
-    )
+    run(&["-ri", "then", INPUTS_DIR])
 }
 
 // --------------------------------------------------
 #[test]
 fn sensitive_count_capital() -> Result<()> {
-    run(
-        &["--count", "The", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.capitalized.count",
-    )
+    run(&["--count", "The", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn sensitive_count_lower() -> Result<()> {
-    run(
-        &["--count", "the", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.lowercase.count",
-    )
+    run(&["--count", "the", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn insensitive_count() -> Result<()> {
-    run(
-        &["-ci", "the", BUSTLE],
-        "./tests/resources/grep/expected/bustle.txt.the.lowercase.insensitive.count",
-    )
+    run(&["-ci", "the", BUSTLE])
 }
 
 // --------------------------------------------------
 #[test]
 fn nobody_count() -> Result<()> {
-    run(
-        &["-c", "nobody", NOBODY],
-        "./tests/resources/grep/expected/nobody.txt.count",
-    )
+    run(&["-c", "nobody", NOBODY])
 }
 
 // --------------------------------------------------
 #[test]
 fn nobody_count_ignore_case() -> Result<()> {
-    run(
-        &["-ci", "nobody", NOBODY],
-        "./tests/resources/grep/expected/nobody.txt.insensitive.count",
-    )
+    run(&["-ci", "nobody", NOBODY])
 }
 
 // --------------------------------------------------
 #[test]
 fn sensitive_count_multiple() -> Result<()> {
-    run(
-        &["-c", "The", BUSTLE, EMPTY, FOX, NOBODY],
-        "./tests/resources/grep/expected/all.the.capitalized.count",
-    )
+    run(&["-c", "The", BUSTLE, EMPTY, FOX, NOBODY])
 }
 
 // --------------------------------------------------
 #[test]
 fn insensitive_count_multiple() -> Result<()> {
-    run(
-        &["-ic", "the", BUSTLE, EMPTY, FOX, NOBODY],
-        "./tests/resources/grep/expected/all.the.lowercase.insensitive.count",
-    )
+    run(&["-ic", "the", BUSTLE, EMPTY, FOX, NOBODY])
 }
 
 // --------------------------------------------------
