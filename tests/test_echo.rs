@@ -1,8 +1,11 @@
+pub mod utils;
+
 use anyhow::Result;
 use assert_cmd::Command;
-use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use std::fs;
+
+use utils::helpers::dies_recommends_usage;
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "echo";
@@ -10,12 +13,7 @@ const SUBCMD: &str = "echo";
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .assert()
-        .failure()
-        .stderr(predicate::str::contains("Usage"));
-    Ok(())
+    dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------

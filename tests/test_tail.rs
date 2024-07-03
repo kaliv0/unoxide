@@ -30,12 +30,6 @@ fn random_string() -> String {
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    // Command::cargo_bin(PRG)?
-    //     .arg(SUBCMD)
-    //     .assert()
-    //     .failure()
-    //     .stderr(predicate::str::contains("Usage"));
-    // Ok(())
     dies_recommends_usage(PRG, SUBCMD)
 }
 

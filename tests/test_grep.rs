@@ -6,7 +6,7 @@ use predicates::prelude::*;
 use pretty_assertions::assert_eq;
 use std::fs;
 
-use utils::helpers::generate_bad_file;
+use utils::helpers::{dies_recommends_usage, generate_bad_file};
 
 const PRG: &str = "unox";
 const SUBCMD: &str = "grep";
@@ -19,12 +19,7 @@ const INPUTS_DIR: &str = "./tests/resources/grep/inputs";
 // --------------------------------------------------
 #[test]
 fn dies_no_args() -> Result<()> {
-    Command::cargo_bin(PRG)?
-        .arg(SUBCMD)
-        .assert()
-        .failure()
-        .stderr(predicate::str::contains("Usage"));
-    Ok(())
+    dies_recommends_usage(PRG, SUBCMD)
 }
 
 // --------------------------------------------------
