@@ -7,7 +7,7 @@ use pretty_assertions::assert_eq;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "cat";
 const EMPTY: &str = "./tests/resources/cat/inputs/empty.txt";
 const FOX: &str = "./tests/resources/cat/inputs/fox.txt";
@@ -156,21 +156,3 @@ fn bustle_b() -> Result<()> {
 fn all() -> Result<()> {
     run(&[FOX, SPIDERS, BUSTLE])
 }
-
-// --------------------------------------------------
-// #[test]
-// fn all_n() -> Result<()> {
-//     run(
-//         &[FOX, SPIDERS, BUSTLE, "-n"],
-//         "tests/resources/cat/expected/all.n.out",
-//     )
-// }
-
-// --------------------------------------------------
-// #[test]
-// fn all_b() -> Result<()> {
-//     run(
-//         &[FOX, SPIDERS, BUSTLE, "-b"],
-//         "tests/resources/cat/expected/all.b.out",
-//     )
-// }

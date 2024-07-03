@@ -10,7 +10,7 @@ use std::io::Read;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "tail";
 const EMPTY: &str = "./tests/resources/tail/inputs/empty.txt";
 const ONE: &str = "./tests/resources/tail/inputs/one.txt";
@@ -90,7 +90,6 @@ fn skips_bad_file() -> Result<()> {
 
 // --------------------------------------------------
 fn run(args: &[&str], expected_file: &str) -> Result<()> {
-    // Extra work here due to lossy UTF
     let mut file = File::open(expected_file)?;
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer)?;

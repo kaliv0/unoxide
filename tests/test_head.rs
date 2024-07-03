@@ -10,7 +10,7 @@ use std::io::prelude::*;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "head";
 const EMPTY: &str = "./tests/resources/head/inputs/empty.txt";
 const ONE: &str = "./tests/resources/head/inputs/one.txt";
@@ -96,7 +96,6 @@ fn run(args: &[&str]) -> Result<()> {
 
 // --------------------------------------------------
 fn run_stdin(args: &[&str], input_file: &str, expected_file: &str) -> Result<()> {
-    // Extra work here due to lossy UTF
     let mut file = File::open(expected_file)?;
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer)?;

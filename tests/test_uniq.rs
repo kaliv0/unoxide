@@ -14,7 +14,7 @@ struct Test {
     out_count: &'static str,
 }
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "uniq";
 
 const EMPTY: Test = Test {

@@ -7,7 +7,7 @@ use pretty_assertions::assert_eq;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "ls";
 const HIDDEN: &str = "./tests/resources/ls/inputs/.hidden";
 const EMPTY: &str = "./tests/resources/ls/inputs/empty.txt";

@@ -8,7 +8,7 @@ use std::fs;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "grep";
 const BUSTLE: &str = "./tests/resources/grep/inputs/bustle.txt";
 const EMPTY: &str = "./tests/resources/grep/inputs/empty.txt";

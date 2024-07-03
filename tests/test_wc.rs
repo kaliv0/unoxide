@@ -8,7 +8,7 @@ use std::fs;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "wc";
 const EMPTY: &str = "./tests/resources/wc/inputs/empty.txt";
 const FOX: &str = "./tests/resources/wc/inputs/fox.txt";

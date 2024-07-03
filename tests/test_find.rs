@@ -8,7 +8,7 @@ use std::{borrow::Cow, fs, path::Path};
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "find";
 
 // --------------------------------------------------

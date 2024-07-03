@@ -1,16 +1,8 @@
 [package]
+author = "kaliv0"
 edition = "2021"
-name = "unox"
+name = "unx"
 version = "0.1.0"
-# author = {...}
-
-# [[bin]]
-# name = "unox"
-# path = "src/main.rs"
-
-# [lib]
-# name = "unox"
-# path = "src/lib.rs"
 
 [dependencies]
 anyhow = "1.0.79"

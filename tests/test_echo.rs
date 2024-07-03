@@ -4,7 +4,7 @@ use anyhow::Result;
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "echo";
 
 // --------------------------------------------------

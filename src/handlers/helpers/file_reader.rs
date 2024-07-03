@@ -15,7 +15,7 @@ pub fn open_file_map_err(filename: &str, subcommand: &str) -> Result<Box<dyn Buf
     match filename {
         "-" => Ok(Box::new(BufReader::new(io::stdin()))),
         _ => Ok(Box::new(BufReader::new(
-            File::open(filename).map_err(|e| anyhow!("{subcommand}: {filename}: {e}"))?, // could be used in the other hadlers?
+            File::open(filename).map_err(|e| anyhow!("{subcommand}: {filename}: {e}"))?,
         ))),
     }
 }

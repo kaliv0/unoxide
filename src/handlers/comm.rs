@@ -72,7 +72,6 @@ fn log_data(
     show_col_3: bool,
     delimiter: &str,
 ) -> impl for<'a> Fn(Column<'a>) + '_ {
-    // TODO: refactor
     move |col: Column| {
         let mut columns = vec![];
         match col {

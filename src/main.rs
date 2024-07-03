@@ -1,4 +1,4 @@
-use unox::cli::interface::Cli;
+use unx::cli::interface::Cli;
 
 fn main() {
     if let Err(e) = Cli::run() {

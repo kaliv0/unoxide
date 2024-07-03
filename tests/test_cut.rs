@@ -7,7 +7,7 @@ use rand::{distributions::Alphanumeric, Rng};
 
 use utils::helpers;
 
-const PRG: &str = "unox";
+const PRG: &str = "unx";
 const SUBCMD: &str = "cut";
 const CSV: &str = "./tests/resources/cut/inputs/movies1.csv";
 const TSV: &str = "./tests/resources/cut/inputs/movies1.tsv";

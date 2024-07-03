@@ -11,10 +11,10 @@ use crate::handlers::{
 use crate::utils::uniq_flags::UniqFlags;
 
 #[derive(Parser)]
-#[clap(name = "unox")]
-// #[clap(author = "")]
+#[clap(name = "unx")]
+#[clap(author = "kaliv0")]
 #[clap(version = "0.0.1")]
-// #[clap(about = "")]
+#[clap(about = "Various Unix commands implemented in Rust")]
 pub struct Cli {
     #[clap(subcommand)]
     subcommands: Subcommands,
@@ -118,7 +118,7 @@ impl Cli {
                 paths,
                 long,
                 show_hidden,
-            } => ls(&paths, long, show_hidden), // _ => Ok(()), // throw error?
+            } => ls(&paths, long, show_hidden),
         }
     }
 }
