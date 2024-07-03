@@ -171,9 +171,6 @@ pub enum Subcommands {
 
         #[command(flatten)]
         extract: ArgsExtract,
-        /*
-        - enable partial ranges (3-, -5) -> use std::ops::RangeTo/RangeFrom
-         */
     },
 
     #[clap(about = help_messages::GREP)]
