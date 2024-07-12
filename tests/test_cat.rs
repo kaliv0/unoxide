@@ -156,3 +156,14 @@ fn bustle_b() -> Result<()> {
 fn all() -> Result<()> {
     run(&[FOX, SPIDERS, BUSTLE])
 }
+
+// --------------------------------------------------
+#[test]
+fn all_n() -> Result<()> {
+    run(&["-n", FOX, SPIDERS, BUSTLE])
+}
+
+#[test]
+fn all_b() -> Result<()> {
+    run(&["-b", FOX, SPIDERS, BUSTLE])
+}
