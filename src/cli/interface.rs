@@ -2,12 +2,7 @@ use anyhow::Result;
 use clap::Parser;
 
 use super::subcommands::Subcommands;
-use crate::handlers::comm::comm;
-use crate::handlers::ls::ls;
-use crate::handlers::tail::tail;
-use crate::handlers::{
-    cat::cat, cut::cut, echo::echo, find::find, grep::grep, head::head, uniq::uniq, wc::wc,
-};
+use crate::handlers::{cat, comm, cut, echo, find, grep, head, ls, tail, uniq, wc};
 use crate::utils::uniq_flags::UniqFlags;
 
 #[derive(Parser)]
