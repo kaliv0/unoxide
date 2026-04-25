@@ -1,4 +1,4 @@
-# Commonly used Unix commands implemented in Rust
+# Coreutils in Rust
 
 [![tests](https://github.com/kaliv0/unoxide/actions/workflows/test.yml/badge.svg)](https://github.com/kaliv0/unoxide/actions/workflows/test.yml)
 
